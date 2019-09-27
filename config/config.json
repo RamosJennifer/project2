@@ -1,8 +1,10 @@
 {
   "development": {
     "username": "root",
-    "password": "pass24",
-    "database": "exampledb",
+
+    "password": "password",
+    "database": "playlists_db",
+
     "host": "localhost",
     "dialect": "mysql"
   },
