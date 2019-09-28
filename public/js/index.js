@@ -1,3 +1,8 @@
+//Materialize JavaScript 
+$(document).ready(function(){
+  $('select').formSelect();
+});
+
 // Get references to page elements
 var $firstName = $("#firstName");
 var $lastName = $("#lastName");
