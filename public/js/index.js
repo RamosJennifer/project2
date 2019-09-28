@@ -1,43 +1,72 @@
-//Materialize JavaScript 
-$(document).ready(function(){
-  $('select').formSelect();
-});
-
 // Get references to page elements
-var $exampleText = $("#example-text");
-var $exampleDescription = $("#example-description");
-var $submitBtn = $("#submit");
-var $exampleList = $("#example-list");
+var $firstName = $("#firstName");
+var $lastName = $("#lastName");
+var $username = $("#username");
+var $password = $("#password");
+var $submitSignup = $("#submitSignup");
+var $submitLogin = $("#submitLogin");
 
 // The API object contains methods for each kind of request we'll make
 var API = {
-  saveExample: function(example) {
+  saveUser: function(user) {
     return $.ajax({
       headers: {
         "Content-Type": "application/json"
       },
       type: "POST",
-      url: "api/examples",
-      data: JSON.stringify(example)
+      url: "api/users",
+      data: JSON.stringify(user)
     });
   },
-  getExamples: function() {
+  loginUser: function(user) {
     return $.ajax({
-      url: "api/examples",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      type: "POST",
+      url: "users/login",
+      data: JSON.stringify(user)
+    });
+  },
+  // getUsers: function() {
+  //   return $.ajax({
+  //     url: "api/users",
+  //     type: "GET"
+  //   });
+  // },
+  deleteUser: function(userID) {
+    return $.ajax({
+      url: "api/users/" + userID,
+      type: "DELETE"
+    });
+  },
+  saveSong: function(song) {
+    return $.ajax({
+      headers: {
+        "Content-Type": "application/json"
+      },
+      type: "POST",
+      url: "api/users",
+      data: JSON.stringify(song)
+    });
+  },
+  getPlaylists: function(userID) {
+    return $.ajax({
+      url: "api/users/" + userID + "/playlists",
       type: "GET"
     });
   },
-  deleteExample: function(id) {
+  deleteSong: function(songID, userID) {
     return $.ajax({
-      url: "api/examples/" + id,
+      url: "api/users/" + userID + "/" + songID,
       type: "DELETE"
     });
   }
 };
 
 // refreshExamples gets new examples from the db and repopulates the list
-var refreshExamples = function() {
-  API.getExamples().then(function(data) {
+var refreshPlaylists = function() {
+  API.getPlaylists().then(function(data) {
     var $examples = data.map(function(example) {
       var $a = $("<a>")
         .text(example.text)
@@ -69,7 +98,7 @@ var refreshExamples = function() {
 var handleFormSubmit = function(event) {
   event.preventDefault();
 
-  var example = {
+  var user = {
     text: $exampleText.val().trim(),
     description: $exampleDescription.val().trim()
   };
@@ -100,5 +129,50 @@ var handleDeleteBtnClick = function() {
 };
 
 // Add event listeners to the submit and delete buttons
-$submitBtn.on("click", handleFormSubmit);
-$exampleList.on("click", ".delete", handleDeleteBtnClick);
+// $submitBtn.on("click", handleFormSubmit);
+// $exampleList.on("click", ".delete", handleDeleteBtnClick);
+
+var handleArtistSearch = function () {
+  event.preventDefault();
+
+  var artist = $("#textarea1").val();
+
+  return $.ajax({
+      type: "POST",
+      url: "/pullsongs",
+      data: {artist: artist},
+      success: function(data) {
+        displaySongs(data);
+      }
+    });
+  
+};
+
+$("#submitArtist").on("click", handleArtistSearch);
+
+var displaySongs = function (data) {
+  let results = $("#resultsArea");
+  results.empty();
+  
+    for (var i = 0; i < data.length; i++) {
+      let songDiv = $("<div>");
+      let songname = $("<h4>");
+      let artist = $("<h4>");
+      let valence = $("<h2>");
+      let energy = $("<h3>");
+      songname.text(data[i].title);
+      artist.text(data[i].artist);
+      valence.text(data[i].valence);
+      energy.text(data[i].energy);
+      songDiv.append(songname)
+      songDiv.append(artist);
+      songDiv.append(valence);
+      songDiv.append(energy);
+      results.append(songDiv);
+    };
+};
+
+
+
+
+

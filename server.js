@@ -1,6 +1,9 @@
 require("dotenv").config();
 var express = require("express");
 var exphbs = require("express-handlebars");
+const keys = require("./keys.js");
+const SpotifyWebApi = require("spotify-web-api-node");
+const spotify = new SpotifyWebApi(keys.spotify);
 
 var db = require("./models");
 
