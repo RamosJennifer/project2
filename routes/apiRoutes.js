@@ -27,8 +27,9 @@ module.exports = function(app) {
   });
 
   app.post("/pullsongs", function(req, res) {
+    console.log(req.body.artist);
 
-    let artistInput = req.body.artist
+    let artistInput = req.body.artist;
 
     spotifyFind(artistInput);
     
@@ -66,7 +67,7 @@ module.exports = function(app) {
 
             spotify.setAccessToken(data.body['access_token']);
 
-                spotify.search(artist,['artist'])
+                spotify.search(artist, ['artist'])
                 .then(function(response) {
                     let artistId = response.body.artists.items[0].id;
                         //console.log(response.body.artists.items[0]);
@@ -82,7 +83,7 @@ module.exports = function(app) {
                             });
                             
                         }
-                        console.log(artistsSongs);
+                        //console.log(artistsSongs);
                         getFeatures();
                     }).catch(function(err) {
                         console.log(err);
@@ -101,7 +102,7 @@ module.exports = function(app) {
     };
 
     function sendTheData() {
-      res.json(artistsSongs); 
+      res.json(artistsSongs);
     }
 
   });

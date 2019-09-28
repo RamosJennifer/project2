@@ -129,7 +129,50 @@ var handleDeleteBtnClick = function() {
 };
 
 // Add event listeners to the submit and delete buttons
-$submitBtn.on("click", handleFormSubmit);
-$exampleList.on("click", ".delete", handleDeleteBtnClick);
+// $submitBtn.on("click", handleFormSubmit);
+// $exampleList.on("click", ".delete", handleDeleteBtnClick);
+
+var handleArtistSearch = function () {
+  event.preventDefault();
+
+  var artist = $("#textarea1").val();
+
+  return $.ajax({
+      type: "POST",
+      url: "/pullsongs",
+      data: {artist: artist},
+      success: function(data) {
+        displaySongs(data);
+      }
+    });
+  
+};
+
+$("#submitArtist").on("click", handleArtistSearch);
+
+var displaySongs = function (data) {
+  let results = $("#resultsArea");
+  results.empty();
+  
+    for (var i = 0; i < data.length; i++) {
+      let songDiv = $("<div>");
+      let songname = $("<h4>");
+      let artist = $("<h4>");
+      let valence = $("<h2>");
+      let energy = $("<h3>");
+      songname.text(data[i].title);
+      artist.text(data[i].artist);
+      valence.text(data[i].valence);
+      energy.text(data[i].energy);
+      songDiv.append(songname)
+      songDiv.append(artist);
+      songDiv.append(valence);
+      songDiv.append(energy);
+      results.append(songDiv);
+    };
+};
+
+
+
 
 
