@@ -132,17 +132,20 @@ var handleDeleteBtnClick = function() {
 // $submitBtn.on("click", handleFormSubmit);
 // $exampleList.on("click", ".delete", handleDeleteBtnClick);
 
+
+// At line 148, change hard-coded emotion in filterSongs() to change data set
 var handleArtistSearch = function () {
   event.preventDefault();
-
   var artist = $("#textarea1").val();
+  var emotion = $("#select").vak();
 
   return $.ajax({
       type: "POST",
       url: "/pullsongs",
       data: {artist: artist},
       success: function(data) {
-        displaySongs(data);
+                   // need to link emotion below to index.hndlbrs
+        filterSongs(data, 'happy');
       }
     });
   
@@ -172,7 +175,31 @@ var displaySongs = function (data) {
     };
 };
 
-
+var filterSongs = function (data, emotion) {
+  let result;
+  switch (emotion) {
+    case 'happy':
+      for (var i = 0; i < data.length; i++) {
+        result = data.filter(elem => elem.valence > 0.6 && elem.energy > 0.6)
+      }
+      displaySongs(result);
+      break;
+    case 'sad':
+      for (var i = 0; i < data.length; i++) {
+        result = data.filter(elem => elem.valence < 0.3 && elem.energy < 0.5)
+      }
+      displaySongs(result);
+      break;
+    case 'mad':
+      for (var i = 0; i < data.length; i++) {
+        result = data.filter(elem => elem.valence < 0.5 && elem.energy > 0.5)
+      }
+      displaySongs(result);
+      break;
+    default:
+      break;
+  }
+}
 
 
 
