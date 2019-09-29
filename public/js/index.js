@@ -137,7 +137,7 @@ var handleDeleteBtnClick = function() {
 var handleArtistSearch = function () {
   event.preventDefault();
   var artist = $("#textarea1").val();
-  var emotion = $("#select").vak();
+  var emotion = $("#select").val();
 
   return $.ajax({
       type: "POST",
@@ -159,18 +159,25 @@ var displaySongs = function (data) {
   
     for (var i = 0; i < data.length; i++) {
       let songDiv = $("<div>");
+      let spotifyPlayer = $("<iframe>");
       let songname = $("<h4>");
       let artist = $("<h4>");
-      let valence = $("<h2>");
-      let energy = $("<h3>");
+      let URI = data[i].URI;
+
+      spotifyPlayer.attr('src', 'https://open.spotify.com/embed/track/' + URI.toString().slice(14));
+      spotifyPlayer.attr('width', '400');
+      spotifyPlayer.attr('height', '75');
+      spotifyPlayer.attr('frameborder', '0');
+      spotifyPlayer.attr('allowtransparency', 'true');
+      spotifyPlayer.attr('allow', 'encrypted-media');
+
       songname.text(data[i].title);
       artist.text(data[i].artist);
-      valence.text(data[i].valence);
-      energy.text(data[i].energy);
+
       songDiv.append(songname)
       songDiv.append(artist);
-      songDiv.append(valence);
-      songDiv.append(energy);
+      songDiv.append(spotifyPlayer);
+
       results.append(songDiv);
     };
 };

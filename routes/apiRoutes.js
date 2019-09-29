@@ -27,7 +27,6 @@ module.exports = function(app) {
   });
 
   app.post("/pullsongs", function(req, res) {
-    console.log(req.body.artist);
 
     let artistInput = req.body.artist;
 
@@ -70,20 +69,19 @@ module.exports = function(app) {
                 spotify.search(artist, ['artist'])
                 .then(function(response) {
                     let artistId = response.body.artists.items[0].id;
-                        //console.log(response.body.artists.items[0]);
 
                     spotify.getArtistTopTracks(artistId, 'US').then(function(res) {
-                        //console.log(res.body.tracks[0]);
+                      
                         for (var i = 0; i < res.body.tracks.length; i++) {
 
                             artistsSongs.push({
                                 title: res.body.tracks[i].name,
                                 artist: res.body.tracks[i].artists[0].name,
-                                trackID: res.body.tracks[i].id
+                                trackID: res.body.tracks[i].id,
+                                URI: res.body.tracks[i].uri
                             });
                             
                         }
-                        //console.log(artistsSongs);
                         getFeatures();
                     }).catch(function(err) {
                         console.log(err);
@@ -96,7 +94,7 @@ module.exports = function(app) {
             },
             
             function(err) {
-            console.log('Something went wrong!', err);
+            console.log(err);
             });
 
     };
