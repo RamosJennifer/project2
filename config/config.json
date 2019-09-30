@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "pass24",
-    "database": "playlists_db",
+    "database": "usersdb",
     "host": "localhost",
     "dialect": "mysql"
   },

@@ -1,6 +1,8 @@
 require("dotenv").config();
 var express = require("express");
 var exphbs = require("express-handlebars");
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
 const keys = require("./keys.js");
 const SpotifyWebApi = require("spotify-web-api-node");
 const spotify = new SpotifyWebApi(keys.spotify);
@@ -27,6 +29,7 @@ app.set("view engine", "handlebars");
 // Routes
 require("./routes/apiRoutes")(app);
 require("./routes/htmlRoutes")(app);
+require("./cookiesAuth/auth")(app);
 
 var syncOptions = { force: false };
 

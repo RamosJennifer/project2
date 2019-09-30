@@ -1,10 +1,22 @@
 var db = require("../models");
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
 require("dotenv").config();
 const keys = require("../keys.js");
 const SpotifyWebApi = require("spotify-web-api-node");
 const spotify = new SpotifyWebApi(keys.spotify);
 
 module.exports = function(app) {
+  app.use(cookieParser());
+  app.use(session({
+    key: 'user_seshID',
+    secret: 'test',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        expires: 600000
+    }
+  }));
   // Get all examples
   app.get("/api/songs", function(req, res) {
     db.Song.findAll({}).then(function(songs) {

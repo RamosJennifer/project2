@@ -12,6 +12,9 @@ $(document).ready(function(){
   $('select').formSelect();
 // Sidenav
   $('.sidenav').sidenav();
+
+  allcookies = document.cookie;
+  console.log(allcookies);
 });
 
 // The API object contains methods for each kind of request we'll make
@@ -22,7 +25,7 @@ var API = {
         "Content-Type": "application/json"
       },
       type: "POST",
-      url: "api/users",
+      url: "api/users/signup",
       data: JSON.stringify(user)
     });
   },
@@ -32,9 +35,15 @@ var API = {
         "Content-Type": "application/json"
       },
       type: "POST",
-      url: "users/login",
+      url: "api/users/login",
       data: JSON.stringify(user)
     });
+  },
+  logoutUser: function(user) {
+    return $.ajax({
+      url: "api/users/logout",
+      type: "POST"
+    })
   },
   // getUsers: function() {
   //   return $.ajax({
@@ -71,12 +80,11 @@ var API = {
     });
   },
   saveSong: function(song) {
-    console.log("test");
     return $.ajax({
       headers: {
         "Content-Type": "application/json"
       },
-      url: "api/users/" + song.spotifyURI,
+      url: "api/users/songs",
       type: "POST",
       data: JSON.stringify(song)
     });
@@ -152,7 +160,6 @@ var handleDeleteBtnClick = function() {
 // $exampleList.on("click", ".delete", handleDeleteBtnClick);
 
 
-// At line 148, change hard-coded emotion in filterSongs() to change data set
 var handleArtistSearch = function () {
   event.preventDefault();
   var artist = $("#textarea1").val();
@@ -164,7 +171,6 @@ var handleArtistSearch = function () {
       url: "/pullsongs",
       data: {artist: artist},
       success: function(data) {
-                   // need to link emotion below to index.hndlbrs
         filterSongs(data, emotion);
       }
     });
@@ -236,14 +242,30 @@ var filterSongs = function (data, emotion) {
 };
 
 var addButtonClick = function() {
+  let emotion = $('select').val();
   let songToAdd = {
     title: $(this).attr("data-title"),
     artist: $(this).attr("data-artist"),
-    spotifyURI: $(this).attr("data-URIsrc")
+    spotifyURI: $(this).attr("data-URIsrc"),
+    emotion: emotion
   }
 
   API.saveSong(songToAdd);
 
   $(this).hide();
 };
+
+
+
+let loginClick = function() {
+  let username = $("#username").val();
+  let password = $("#password").val();
+  let user = {
+    username: username,
+    password: password
+  }
+  API.loginUser(user);
+};
+
+$("#subLog").on("click", loginClick);
 
