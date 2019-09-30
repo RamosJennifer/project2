@@ -6,6 +6,17 @@ var $password = $("#password");
 var $submitSignup = $("#submitSignup");
 var $submitLogin = $("#submitLogin");
 
+$(document).ready(function(){
+  $(document).on("click", ".songAdder", addButtonClick);
+// Choose an Emotion Dropdown
+  $('select').formSelect();
+// Sidenav
+  $('.sidenav').sidenav();
+
+  allcookies = document.cookie;
+  console.log(allcookies);
+});
+
 // The API object contains methods for each kind of request we'll make
 var API = {
   saveUser: function(user) {
@@ -14,7 +25,7 @@ var API = {
         "Content-Type": "application/json"
       },
       type: "POST",
-      url: "api/users",
+      url: "api/users/signup",
       data: JSON.stringify(user)
     });
   },
@@ -24,9 +35,15 @@ var API = {
         "Content-Type": "application/json"
       },
       type: "POST",
-      url: "users/login",
+      url: "api/users/login",
       data: JSON.stringify(user)
     });
+  },
+  logoutUser: function(user) {
+    return $.ajax({
+      url: "api/users/logout",
+      type: "POST"
+    })
   },
   // getUsers: function() {
   //   return $.ajax({
@@ -60,6 +77,16 @@ var API = {
     return $.ajax({
       url: "api/users/" + userID + "/" + songID,
       type: "DELETE"
+    });
+  },
+  saveSong: function(song) {
+    return $.ajax({
+      headers: {
+        "Content-Type": "application/json"
+      },
+      url: "api/users/songs",
+      type: "POST",
+      data: JSON.stringify(song)
     });
   }
 };
@@ -133,19 +160,18 @@ var handleDeleteBtnClick = function() {
 // $exampleList.on("click", ".delete", handleDeleteBtnClick);
 
 
-// At line 148, change hard-coded emotion in filterSongs() to change data set
 var handleArtistSearch = function () {
   event.preventDefault();
   var artist = $("#textarea1").val();
-  var emotion = $("#select").vak();
+  var emotion = $('select').val();
+  console.log(emotion);
 
   return $.ajax({
       type: "POST",
       url: "/pullsongs",
       data: {artist: artist},
       success: function(data) {
-                   // need to link emotion below to index.hndlbrs
-        filterSongs(data, 'happy');
+        filterSongs(data, emotion);
       }
     });
   
@@ -159,18 +185,32 @@ var displaySongs = function (data) {
   
     for (var i = 0; i < data.length; i++) {
       let songDiv = $("<div>");
+      let spotifyPlayer = $("<iframe>");
       let songname = $("<h4>");
       let artist = $("<h4>");
-      let valence = $("<h2>");
-      let energy = $("<h3>");
+      let addButton = $("<button>");
+      let URI = data[i].URI;
+
+      spotifyPlayer.attr('src', 'https://open.spotify.com/embed/track/' + URI.toString().slice(14));
+      spotifyPlayer.attr('width', '400');
+      spotifyPlayer.attr('height', '75');
+      spotifyPlayer.attr('frameborder', '0');
+      spotifyPlayer.attr('allowtransparency', 'true');
+      spotifyPlayer.attr('allow', 'encrypted-media');
+
       songname.text(data[i].title);
       artist.text(data[i].artist);
-      valence.text(data[i].valence);
-      energy.text(data[i].energy);
+      addButton.addClass("songAdder");
+      addButton.text("Add this track");
+      addButton.attr("data-URIsrc", data[i].URI.toString().slice(14));
+      addButton.attr("data-title", data[i].title);
+      addButton.attr("data-artist", data[i].artist);
+
       songDiv.append(songname)
       songDiv.append(artist);
-      songDiv.append(valence);
-      songDiv.append(energy);
+      songDiv.append(spotifyPlayer);
+      songDiv.append(addButton);
+
       results.append(songDiv);
     };
 };
@@ -199,7 +239,33 @@ var filterSongs = function (data, emotion) {
     default:
       break;
   }
-}
+};
+
+var addButtonClick = function() {
+  let emotion = $('select').val();
+  let songToAdd = {
+    title: $(this).attr("data-title"),
+    artist: $(this).attr("data-artist"),
+    spotifyURI: $(this).attr("data-URIsrc"),
+    emotion: emotion
+  }
+
+  API.saveSong(songToAdd);
+
+  $(this).hide();
+};
 
 
+
+let loginClick = function() {
+  let username = $("#username").val();
+  let password = $("#password").val();
+  let user = {
+    username: username,
+    password: password
+  }
+  API.loginUser(user);
+};
+
+$("#subLog").on("click", loginClick);
 

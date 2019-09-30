@@ -1,10 +1,22 @@
 var db = require("../models");
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
 require("dotenv").config();
 const keys = require("../keys.js");
 const SpotifyWebApi = require("spotify-web-api-node");
 const spotify = new SpotifyWebApi(keys.spotify);
 
 module.exports = function(app) {
+  app.use(cookieParser());
+  app.use(session({
+    key: 'user_seshID',
+    secret: 'test',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        expires: 600000
+    }
+  }));
   // Get all examples
   app.get("/api/songs", function(req, res) {
     db.Song.findAll({}).then(function(songs) {
@@ -27,7 +39,6 @@ module.exports = function(app) {
   });
 
   app.post("/pullsongs", function(req, res) {
-    console.log(req.body.artist);
 
     let artistInput = req.body.artist;
 
@@ -70,20 +81,19 @@ module.exports = function(app) {
                 spotify.search(artist, ['artist'])
                 .then(function(response) {
                     let artistId = response.body.artists.items[0].id;
-                        //console.log(response.body.artists.items[0]);
 
                     spotify.getArtistTopTracks(artistId, 'US').then(function(res) {
-                        //console.log(res.body.tracks[0]);
+                      
                         for (var i = 0; i < res.body.tracks.length; i++) {
 
                             artistsSongs.push({
                                 title: res.body.tracks[i].name,
                                 artist: res.body.tracks[i].artists[0].name,
-                                trackID: res.body.tracks[i].id
+                                trackID: res.body.tracks[i].id,
+                                URI: res.body.tracks[i].uri
                             });
                             
                         }
-                        //console.log(artistsSongs);
                         getFeatures();
                     }).catch(function(err) {
                         console.log(err);
@@ -96,7 +106,7 @@ module.exports = function(app) {
             },
             
             function(err) {
-            console.log('Something went wrong!', err);
+            console.log(err);
             });
 
     };
