@@ -6,6 +6,14 @@ var $password = $("#password");
 var $submitSignup = $("#submitSignup");
 var $submitLogin = $("#submitLogin");
 
+$(document).ready(function(){
+$(document).on("click", ".songAdder", addButtonClick);
+// Choose an Emotion Dropdown
+$('select').formSelect();
+// Sidenav
+$('.sidenav').sidenav();
+});
+
 // The API object contains methods for each kind of request we'll make
 var API = {
   saveUser: function(user) {
@@ -163,9 +171,6 @@ var handleArtistSearch = function () {
 };
 
 $("#submitArtist").on("click", handleArtistSearch);
-$(document).ready(function() {
-$(document).on("click", ".songAdder", addButtonClick);
-});
 
 var displaySongs = function (data) {
   let results = $("#resultsArea");
