@@ -7,11 +7,11 @@ var $submitSignup = $("#submitSignup");
 var $submitLogin = $("#submitLogin");
 
 $(document).ready(function(){
-$(document).on("click", ".songAdder", addButtonClick);
+  $(document).on("click", ".songAdder", addButtonClick);
 // Choose an Emotion Dropdown
-$('select').formSelect();
+  $('select').formSelect();
 // Sidenav
-$('.sidenav').sidenav();
+  $('.sidenav').sidenav();
 });
 
 // The API object contains methods for each kind of request we'll make
@@ -156,7 +156,8 @@ var handleDeleteBtnClick = function() {
 var handleArtistSearch = function () {
   event.preventDefault();
   var artist = $("#textarea1").val();
-  var emotion = $("#select").val();
+  var emotion = $('select').val();
+  console.log(emotion);
 
   return $.ajax({
       type: "POST",
@@ -164,7 +165,7 @@ var handleArtistSearch = function () {
       data: {artist: artist},
       success: function(data) {
                    // need to link emotion below to index.hndlbrs
-        filterSongs(data, 'mad');
+        filterSongs(data, emotion);
       }
     });
   
