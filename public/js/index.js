@@ -61,6 +61,17 @@ var API = {
       url: "api/users/" + userID + "/" + songID,
       type: "DELETE"
     });
+  },
+  saveSong: function(song) {
+    console.log("test");
+    return $.ajax({
+      headers: {
+        "Content-Type": "application/json"
+      },
+      url: "api/users/" + song.spotifyURI,
+      type: "POST",
+      data: JSON.stringify(song)
+    });
   }
 };
 
@@ -145,13 +156,16 @@ var handleArtistSearch = function () {
       data: {artist: artist},
       success: function(data) {
                    // need to link emotion below to index.hndlbrs
-        filterSongs(data, 'happy');
+        filterSongs(data, 'mad');
       }
     });
   
 };
 
 $("#submitArtist").on("click", handleArtistSearch);
+$(document).ready(function() {
+$(document).on("click", ".songAdder", addButtonClick);
+});
 
 var displaySongs = function (data) {
   let results = $("#resultsArea");
@@ -162,6 +176,7 @@ var displaySongs = function (data) {
       let spotifyPlayer = $("<iframe>");
       let songname = $("<h4>");
       let artist = $("<h4>");
+      let addButton = $("<button>");
       let URI = data[i].URI;
 
       spotifyPlayer.attr('src', 'https://open.spotify.com/embed/track/' + URI.toString().slice(14));
@@ -173,10 +188,16 @@ var displaySongs = function (data) {
 
       songname.text(data[i].title);
       artist.text(data[i].artist);
+      addButton.addClass("songAdder");
+      addButton.text("Add this track");
+      addButton.attr("data-URIsrc", data[i].URI.toString().slice(14));
+      addButton.attr("data-title", data[i].title);
+      addButton.attr("data-artist", data[i].artist);
 
       songDiv.append(songname)
       songDiv.append(artist);
       songDiv.append(spotifyPlayer);
+      songDiv.append(addButton);
 
       results.append(songDiv);
     };
@@ -206,7 +227,17 @@ var filterSongs = function (data, emotion) {
     default:
       break;
   }
-}
+};
 
+var addButtonClick = function() {
+  let songToAdd = {
+    title: $(this).attr("data-title"),
+    artist: $(this).attr("data-artist"),
+    spotifyURI: $(this).attr("data-URIsrc")
+  }
 
+  API.saveSong(songToAdd);
+
+  $(this).hide();
+};
 
