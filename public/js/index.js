@@ -1,6 +1,9 @@
 //Materialize JavaScript 
 $(document).ready(function(){
+  // Choose an Emotion Dropdown
   $('select').formSelect();
+  // Sidenav
+  $('.sidenav').sidenav();     
 });
 
 // Get references to page elements
