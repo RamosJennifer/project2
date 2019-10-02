@@ -1,9 +1,3 @@
-// Get references to page elements
-var $firstName = $("#firstName");
-var $lastName = $("#lastName");
-var $username = $("#username");
-var $password = $("#password");
-
 $(document).ready(function(){
 // Click event on 'add song' button. Function found at line 248
   $(document).on("click", ".songAdder", addButtonClick);
@@ -35,7 +29,7 @@ var API = {
       data: JSON.stringify(user)
     });
   },
-  logoutUser: function(user) {
+  logoutUser: function() {
     return $.ajax({
       url: "api/users/logout",
       type: "POST"
@@ -108,10 +102,10 @@ var refreshPlaylists = function() {
 
 
 // Sign-up user onclick / pass to API.saveUser method
-var handleSignup = function(event) {
+let handleSignup = function(event) {
   event.preventDefault();
 
-  var user = {
+  let user = {
     firstName: $("#firstName").val().trim(),
     lastName: $("#lastName").val().trim(),
     username: $("#username").val().trim(),
@@ -132,6 +126,27 @@ var handleSignup = function(event) {
 };
 
 $("#submitSignup").on("click", handleSignup);
+
+
+
+// Gather username / password information, pass to API.loginUser method
+let handleLogin = function() {
+  let username = $("#username").val().trim();
+  let password = $("#password").val().trim();
+  let user = {
+    username: username,
+    password: password
+  }
+  API.loginUser(user);
+};
+
+$("#subLog").on("click", handleLogin);
+
+
+
+let handleLogout = function() {
+  API.logoutUser();
+};
 
 
 // handleDeleteBtnClick is called when an example's delete button is clicked
@@ -195,7 +210,12 @@ var filterSongs = function (data, emotion) {
 
 var displaySongs = function (data) {
   let results = $("#resultsArea");
+  let emotion = $('select').val();
   results.empty();
+
+  if (data.length === 0) {
+    results.text("Sorry, this artist doesn't seem to have any " + emotion + " songs...");
+  }
   
     for (var i = 0; i < data.length; i++) {
       let songDiv = $("<div>");
@@ -249,16 +269,5 @@ var addButtonClick = function() {
 };
 
 
-// Gather username / password information, pass to API.loginUser method
-let loginClick = function() {
-  let username = $("#username").val();
-  let password = $("#password").val();
-  let user = {
-    username: username,
-    password: password
-  }
-  API.loginUser(user);
-};
 
-$("#subLog").on("click", loginClick);
 

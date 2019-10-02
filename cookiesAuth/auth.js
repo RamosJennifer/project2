@@ -1,6 +1,7 @@
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var db = require("../models");
+var bcrypt = require("bcryptjs");
 
 module.exports = function(app) {
 
@@ -33,17 +34,39 @@ var sessionChecker = (req, res, next) => {
 app.route('/api/users/signup').get(sessionChecker, (req, res) => {
     res.render('signup');
 }).post((req, res) => {
-    db.User.create({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        username: req.body.username,
-        password: req.body.password
-    }).then(user => {
-        req.session.user = user.Datavalues;
-        res.redirect('/');
-        //res.send('signedup');
-    }).catch(error => {
-        res.send(error);
+    // db.User.create({
+    //     firstName: req.body.firstName,
+    //     lastName: req.body.lastName,
+    //     username: req.body.username,
+    //     password: req.body.password
+    // }).then(user => {
+    //     req.session.user = user.Datavalues;
+    //     res.redirect('/');
+    //     //res.send('signedup');
+    // }).catch(error => {
+    //     res.send(error);
+    // });
+    //
+    db.User.findOne({
+      where: { username: req.body.username}
+    }).then(function(checkForUser) {
+      if (!checkForUser) {
+        bcrypt.genSalt(10, function(err, salt) {
+          bcrypt.hash(req.body.password, salt, function(err, hash) {
+            db.User.create({
+              firstName: req.body.firstName,
+              lastName: req.body.lastName,
+              username: req.body.username,
+              password: hash
+            }).then(function(newUser) {
+              req.session.user = newUser.datavalues;
+              res.json("ppizza");
+            });
+          });
+        });
+      } else {
+        res.send('User already exists with this username')
+      }
     });
 });
 
@@ -56,11 +79,16 @@ app.route('/api/users/login').get(sessionChecker, (req, res) => {
         db.User.findOne({where: {username: username} }).then(function(user) {
             if (!user) {
                 res.render('login');
-            } else if (user.password !== password) {
-                res.render('login');
             } else {
-                req.session.user = user.dataValues;
-                res.redirect('/');
+                bcrypt.compare(req.body.password, user.password, function(err, result) {
+                    if (result == true) {
+                    req.session.user = user.dataValues;
+                    res.redirect('/');
+                    } else if (user.password !== password) {
+                    // res.render('login');
+                    res.json('incorrect password');
+                    }
+                });
             }
         });
 });
