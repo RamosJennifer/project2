@@ -12,6 +12,10 @@ $(document).ready(function(){
   $('select').formSelect();
   // Sidenav
   $('.sidenav').sidenav();
+  // Create an Account Form
+  $('input#input_text, textarea#textarea2').characterCounter();
+  //Open Modal
+  $('.modal').modal(); 
 
   allcookies = document.cookie;
   console.log(allcookies);
