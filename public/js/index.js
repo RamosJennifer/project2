@@ -8,9 +8,9 @@ var $submitLogin = $("#submitLogin");
 
 $(document).ready(function(){
   $(document).on("click", ".songAdder", addButtonClick);
-// Choose an Emotion Dropdown
+  // Choose an Emotion Dropdown
   $('select').formSelect();
-// Sidenav
+  // Sidenav
   $('.sidenav').sidenav();
 
   allcookies = document.cookie;
