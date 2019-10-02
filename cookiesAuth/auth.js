@@ -60,15 +60,12 @@ app.route('/api/users/login').get(sessionChecker, (req, res) => {
                 res.render('login');
             } else {
                 req.session.user = user.dataValues;
-                // res.redirect('/');
-                res.send("'" + req.session.user.id + "'");
+                res.redirect('/');
             }
         });
 });
 
 app.get('/dashboard', (req, res) => {
-    // console.log(req.session.user);
-    // console.log( req.session.user.id);
     if (req.session.user && req.cookies.user_seshID) {
         res.sendFile(__dirname + '/public/dashboard.html');
     } else {

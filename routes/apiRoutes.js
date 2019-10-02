@@ -1,26 +1,26 @@
 var db = require("../models");
-var session = require('express-session');
-var cookieParser = require('cookie-parser');
 require("dotenv").config();
 const keys = require("../keys.js");
 const SpotifyWebApi = require("spotify-web-api-node");
 const spotify = new SpotifyWebApi(keys.spotify);
 
 module.exports = function(app) {
-  app.use(cookieParser());
-  app.use(session({
-    key: 'user_seshID',
-    secret: 'test',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        expires: 600000
-    }
-  }));
-  // Get all examples
-  app.get("/api/songs", function(req, res) {
-    db.Song.findAll({}).then(function(songs) {
+  // Get all users
+  app.get("/api/users", function(req, res) {
+    db.User.findAll({include: db.Song}).then(function(songs) {
       res.json(songs);
+    });
+  });
+
+  // Get specific user and all their songs
+  app.get('/api/users/:id', function(req, res) {
+    db.User.findOne({
+      where: {
+        id : req.params.id
+        },
+        include: [db.Song]
+        }).then(function(data) {
+      res.json(data);
     });
   });
 
@@ -38,6 +38,7 @@ module.exports = function(app) {
     });
   });
 
+  // Spotify API call, grabbing songs and sending to client to be filtered
   app.post("/pullsongs", function(req, res) {
 
     let artistInput = req.body.artist;
