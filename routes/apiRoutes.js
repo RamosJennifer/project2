@@ -24,6 +24,7 @@ module.exports = function (app) {
   app.get("/api/songsbyemotion/:emotion", function (req, res) {
     db.Song.findAll({ where: { emotion: req.params.emotion } }).then(function (songs) {
     });
+  });
   // Get all users
   app.get("/api/users", function(req, res) {
     db.User.findAll({include: db.Song}).then(function(songs) {
