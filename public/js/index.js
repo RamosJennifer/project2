@@ -57,16 +57,6 @@ var API = {
       type: "DELETE"
     });
   },
-  saveSong: function(song) {
-    return $.ajax({
-      headers: {
-        "Content-Type": "application/json"
-      },
-      type: "POST",
-      url: "api/users",
-      data: JSON.stringify(song)
-    });
-  },
   getPlaylists: function(userID) {
     return $.ajax({
       url: "api/users/" + userID + "/playlists",
