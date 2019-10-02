@@ -1,10 +1,14 @@
 $(document).ready(function(){
 // Click event on 'add song' button. Function found at line 248
   $(document).on("click", ".songAdder", addButtonClick);
-// Choose an Emotion Dropdown
+  // Choose an Emotion Dropdown
   $('select').formSelect();
-// Sidenav
+  // Sidenav
   $('.sidenav').sidenav();
+  // Create an Account Form
+  $('input#input_text, textarea#textarea2').characterCounter();
+  //Open Modal
+  $('.modal').modal();
 });
 
 // The API object contains methods for each kind of request we'll make
