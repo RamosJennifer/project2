@@ -1,3 +1,3 @@
+
 DROP DATABASE IF EXISTS usersdb;
 CREATE DATABASE usersdb;
-
