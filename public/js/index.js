@@ -1,4 +1,6 @@
 $(document).ready(function(){
+
+  console.log("loaded")
 // Click event on 'add song' button. Function found at line 248
   $(document).on("click", ".songAdder", addButtonClick);
   // Choose an Emotion Dropdown
@@ -9,7 +11,25 @@ $(document).ready(function(){
   $('input#input_text, textarea#textarea2').characterCounter();
   //Open Modal
   $('.modal').modal();
+  // Playlists Page
+  $('.pushpin').pushpin();
+
+  // Plalists Page
+$('.pushpin-demo-nav').each(function() {
+  var $this = $(this);
+  var $target = $('#' + $(this).attr('data-target'));
+  $this.pushpin({
+    top: $target.offset().top,
+    bottom: $target.offset().top + $target.outerHeight() - $this.height()
+  });
 });
+
+
+
+
+});
+
+
 
 // The API object contains methods for each kind of request we'll make
 var API = {
