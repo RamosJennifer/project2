@@ -114,7 +114,10 @@ app.post("/api/users/songs", function(req, res) {
   app.post("/auth/checksession", function(req, res) {
       console.log('ping');
     if (req.session.user && req.cookies.user_seshID) {
-        res.json({bool: true});
+        res.json({
+            bool: true,
+            firstName: req.session.user.firstName
+            });
     } else {
         res.json({bool: false});  
     }

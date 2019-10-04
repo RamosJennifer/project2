@@ -30,7 +30,10 @@ var API = {
       },
       type: "POST",
       url: "api/users/login",
-      data: JSON.stringify(user)
+      data: JSON.stringify(user),
+      success: function () {
+        displayWelcome();
+      }
     });
   },
   logoutUser: function() {
@@ -306,6 +309,19 @@ var checkCurrentSession = function() {
       }
     });
 }
+
+let welcomeMessage = $("#welcome");
+var displayWelcome = function() {
+  checkCurrentSession().then(function(sesh) {
+    console.log(sesh.firstName);
+    if (sesh.firstName) {
+      welcomeMessage.text("Hi, " + sesh.firstName + ", welcome back");
+    } else {
+      welcomeMessage.text("Welcome! Create an account or Login to discover and save songs");
+    }
+  });
+};
+displayWelcome();
 
 
 
