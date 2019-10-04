@@ -119,14 +119,21 @@ let handleSignup = function(event) {
   if (!(user.username && user.password)) {
     alert("You must enter a username and password!");
     return;
-  }
+  };
+
+  if(user.password !== $("#password2").val().trim()) {
+    alert("Passwords do not match");
+    return;
+  };
 
   API.saveUser(user);
 
+  $("#modal1").hide();
   $("#firstName").val("");
   $("#lastName").val("");
   $("#username").val("");
   $("#password").val("");
+  $("#password2").val("");
 };
 
 $("#createAccount").on("click", handleSignup);
@@ -135,6 +142,7 @@ $("#createAccount").on("click", handleSignup);
 
 // Gather username / password information, pass to API.loginUser method
 let handleLogin = function() {
+  event.preventDefault();
   let username = $("#usernameLogin").val().trim();
   let password = $("#passwordLogin").val().trim();
   let user = {
@@ -235,6 +243,7 @@ var displaySongs = function (data) {
       spotifyPlayer.attr('allowtransparency', 'true');
       spotifyPlayer.attr('allow', 'encrypted-media');
 
+      songDiv.addClass("songContainer");
       songname.addClass("songnameH");
       songname.text(data[i].title);
 
@@ -262,6 +271,8 @@ $("#submitArtist").on("click", handleArtistSearch);
 // Store song information / pass to API.saveSong method
 var addButtonClick = function() {
 
+  let thisButton = $(this).parent();
+
   let emotion = $('select').val();
 
   let songToAdd = {
@@ -271,10 +282,30 @@ var addButtonClick = function() {
     emotion: emotion
   }
 
-  API.saveSong(songToAdd);
-
-  $(this).hide();
+  checkCurrentSession().then(function(sesh) {
+    console.log(sesh.bool);
+      if (!sesh.bool) {
+      $("#createAccount").show();
+      $("#modal1").show();
+      $("#modal1").css('zIndex', '200');
+      }
+      else {
+      API.saveSong(songToAdd);
+      thisButton.hide();
+      }
+  });
 };
+
+var checkCurrentSession = function() {
+  return $.ajax({
+      url: "/tester",
+      type: "POST",
+      data: {bool: null},
+      success: function(data) {
+        return (data);
+      }
+    });
+}
 
 
 

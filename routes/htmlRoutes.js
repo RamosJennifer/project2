@@ -35,6 +35,13 @@ module.exports = function(app) {
     });
   });
 
+  app.get("/tester", function(req, res) {
+    console.log('test');
+    res.render("index", {
+      renderModal: 'false'
+    });
+  });
+
   // Render 404 page for any unmatched routes
   app.get("*", function(req, res) {
     res.render("404");

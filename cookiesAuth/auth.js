@@ -34,19 +34,6 @@ var sessionChecker = (req, res, next) => {
 app.route('/api/users/signup').get(sessionChecker, (req, res) => {
     res.render('signup');
 }).post((req, res) => {
-    // db.User.create({
-    //     firstName: req.body.firstName,
-    //     lastName: req.body.lastName,
-    //     username: req.body.username,
-    //     password: req.body.password
-    // }).then(user => {
-    //     req.session.user = user.Datavalues;
-    //     res.redirect('/');
-    //     //res.send('signedup');
-    // }).catch(error => {
-    //     res.send(error);
-    // });
-    //
     db.User.findOne({
       where: { username: req.body.username}
     }).then(function(checkForUser) {
@@ -122,6 +109,15 @@ app.post("/api/users/songs", function(req, res) {
       }).then(function(newSong) {
       res.json(newSong)
     });
+  });
+
+  app.post("/tester", function(req, res) {
+    console.log('test');
+    if (req.session.user && req.cookies.user_seshID) {
+        res.json({bool: true});
+    } else {
+        res.json({bool: false});  
+    }
   });
 
 app.use(function (req, res, next) {
