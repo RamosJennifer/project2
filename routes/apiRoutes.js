@@ -6,6 +6,9 @@ const spotify = new SpotifyWebApi(keys.spotify);
 
 
 module.exports = function (app) {
+
+  // ================================= Song Routes ======================================
+
   // Get all songs
   app.get("/api/songs", function (req, res) {
     db.Song.findAll({}).then(function (songs) {
@@ -15,41 +18,25 @@ module.exports = function (app) {
 
   // Get a song by id
   app.get("/api/songsbyid/:id", function (req, res) {
-    db.Song.findAll({ where: { id: req.params.id } }).then(function (songs) {
+    db.Song.findAll({
+      where: {
+        id: req.params.id
+      }
+    }).then(function (songs) {
       res.json(songs);
     });
   });
 
   // Get all songs by emotion
   app.get("/api/songsbyemotion/:emotion", function (req, res) {
-    db.Song.findAll({ where: { emotion: req.params.emotion } }).then(function (songs) {
-    });
-  });
-  // Get all users
-  app.get("/api/users", function(req, res) {
-    db.User.findAll({include: db.Song}).then(function(songs) {
-
-      res.json(songs);
-    });
-  });
-
-  // Get specific user and all their songs
-  app.get('/api/users/:id', function(req, res) {
-    db.User.findOne({
+    db.Song.findAll({
       where: {
-        id : req.params.id
-        },
-        include: [db.Song]
-        }).then(function(data) {
-      res.json(data);
+        emotion: req.params.emotion
+      }
+    }).then(function (songs) {
+      console.log(songs)
     });
-  });
 
-  // Create a new example
-  app.post("/api/examples", function (req, res) {
-    db.Example.create(req.body).then(function (dbExample) {
-      res.json(dbExample);
-    });
   });
 
   // Delete all songs
@@ -61,20 +48,67 @@ module.exports = function (app) {
 
   // Delete a song by id
   app.delete("/api/songs/deletebyid/:id", function (req, res) {
-    db.Song.destroy({ where: { id: req.params.id } }).then(function (songs) {
+    db.Song.destroy({
+      where: {
+        id: req.params.id
+      }
+    }).then(function (songs) {
       res.json(songs);
     });
   });
 
   // Delete all songs by emotion
   app.delete("/api/songsbyemotion/:emotion", function (req, res) {
-    db.Song.destroy({ where: { emotion: req.params.emotion } }).then(function (songs) {
+    db.Song.destroy({
+      where: {
+        emotion: req.params.emotion
+      }
+    }).then(function (songs) {
       res.json(songs);
     });
   });
 
+  // ================================= User Routes ======================================
+
+  // Get all users
+  app.get("/api/users", function (req, res) {
+    db.User.findAll({
+      include:
+        db.Song
+    }).then(function (songs) {
+      res.json(songs);
+    });
+  });
+
+  // Get specific user and all their songs
+  app.get('/api/users/:id', function (req, res) {
+    db.User.findOne({
+      where: {
+        id: req.params.id
+      },
+      include: [db.Song]
+    }).then(function (data) {
+      res.json(data);
+    });
+  });
+
+  // Edit user information
+  app.put("/api/userinfo/:id", function (req, res) {
+    db.User.update(req.body,
+      {
+        where: {
+          id: req.params.id
+        }
+      }).then(function (users) {
+        res.json(users);
+        console.log(users);
+      });
+  });
+
+  // ================================= Spotify Route ======================================
+
   // Spotify API call, grabbing songs and sending to client to be filtered
-  app.post("/pullsongs", function(req, res) {
+  app.post("/pullsongs", function (req, res) {
 
     let artistInput = req.body.artist;
 
