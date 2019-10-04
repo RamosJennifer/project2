@@ -10,6 +10,7 @@ app.use(session({
     key: 'user_seshID',
     secret: 'test',
     resave: false,
+    httpOnly: false,
     saveUninitialized: false,
     cookie: {
         expires: 600000
@@ -34,19 +35,6 @@ var sessionChecker = (req, res, next) => {
 app.route('/api/users/signup').get(sessionChecker, (req, res) => {
     res.render('signup');
 }).post((req, res) => {
-    // db.User.create({
-    //     firstName: req.body.firstName,
-    //     lastName: req.body.lastName,
-    //     username: req.body.username,
-    //     password: req.body.password
-    // }).then(user => {
-    //     req.session.user = user.Datavalues;
-    //     res.redirect('/');
-    //     //res.send('signedup');
-    // }).catch(error => {
-    //     res.send(error);
-    // });
-    //
     db.User.findOne({
       where: { username: req.body.username}
     }).then(function(checkForUser) {

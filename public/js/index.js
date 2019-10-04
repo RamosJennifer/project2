@@ -47,7 +47,7 @@ var API = {
   },
   deleteUser: function(userID) {
     return $.ajax({
-      url: "api/users/" + userID,
+      url: "api/users/delete/" + userID,
       type: "DELETE"
     });
   },
@@ -129,14 +129,14 @@ let handleSignup = function(event) {
   $("#password").val("");
 };
 
-$("#submitSignup").on("click", handleSignup);
+$("#createAccount").on("click", handleSignup);
 
 
 
 // Gather username / password information, pass to API.loginUser method
 let handleLogin = function() {
-  let username = $("#username").val().trim();
-  let password = $("#password").val().trim();
+  let username = $("#usernameLogin").val().trim();
+  let password = $("#passwordLogin").val().trim();
   let user = {
     username: username,
     password: password
@@ -144,7 +144,7 @@ let handleLogin = function() {
   API.loginUser(user);
 };
 
-$("#subLog").on("click", handleLogin);
+$("#submitLogin").on("click", handleLogin);
 
 
 
@@ -191,7 +191,7 @@ var filterSongs = function (data, emotion) {
   switch (emotion) {
     case 'happy':
       for (var i = 0; i < data.length; i++) {
-        result = data.filter(elem => elem.valence > 0.6 && elem.energy > 0.6)
+        result = data.filter(elem => elem.valence > 0.6 && elem.energy > 0.6 && elem.mode == 1)
       }
       displaySongs(result);
       break;
@@ -258,6 +258,7 @@ $("#submitArtist").on("click", handleArtistSearch);
 
 // Store song information / pass to API.saveSong method
 var addButtonClick = function() {
+  console.log(document);
   let emotion = $('select').val();
 
   let songToAdd = {

@@ -23,12 +23,14 @@ module.exports = function (app) {
   // Get all songs by emotion
   app.get("/api/songsbyemotion/:emotion", function (req, res) {
     db.Song.findAll({ where: { emotion: req.params.emotion } }).then(function (songs) {
+      res.json(songs);
     });
+  });
   // Get all users
   app.get("/api/users", function(req, res) {
-    db.User.findAll({include: db.Song}).then(function(songs) {
+    db.User.findAll({include: db.Song}).then(function(users) {
 
-      res.json(songs);
+      res.json(users);
     });
   });
 
@@ -41,13 +43,6 @@ module.exports = function (app) {
         include: [db.Song]
         }).then(function(data) {
       res.json(data);
-    });
-  });
-
-  // Create a new example
-  app.post("/api/examples", function (req, res) {
-    db.Example.create(req.body).then(function (dbExample) {
-      res.json(dbExample);
     });
   });
 
@@ -72,6 +67,15 @@ module.exports = function (app) {
     });
   });
 
+  // Delete user and their songs
+  app.delete("/api/users/delete/:id", function(req, res) {
+    db.Song.destroy({where: {UserId: req.params.id} }).then(function(songs) {
+      db.User.destroy({ where: {id: req.params.id} }).then(function (users) {
+        res.json(songs);
+      });
+    });
+  });
+
   // Spotify API call, grabbing songs and sending to client to be filtered
   app.post("/pullsongs", function(req, res) {
 
@@ -89,6 +93,7 @@ module.exports = function (app) {
             for (var i = 0; i < responses.body.audio_features.length; i++) {
               elem['valence'] = responses.body.audio_features[i].valence;
               elem['energy'] = responses.body.audio_features[i].energy;
+              elem['mode'] = responses.body.audio_features[i].mode;
               processedItems++;
             }
             if (processedItems === artistsSongs.length) {
