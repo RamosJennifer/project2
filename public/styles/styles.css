@@ -20,8 +20,13 @@
   border-color: #008B8B;
   border-width: 10px;
 }
+#modal1, #modal2{
+  border-style: solid;
+  border-color: #008B8B;
+  border-width: 3px;
+}
 .songnameH{
-  color:white;
+  color:black;
   border-bottom: 3px solid #008B8B;
   background-color: rgb(227, 231, 235);
 }
