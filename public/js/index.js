@@ -178,6 +178,7 @@ $("#submitLogin").on("click", handleLogin);
 let handleLogout = function() {
   API.logoutUser();
 };
+$("#logoutButton").on("click", handleLogout);
 
 
 // handleDeleteBtnClick is called when an example's delete button is clicked
@@ -339,6 +340,14 @@ var displayWelcome = function() {
 };
 displayWelcome();
 
+let findMyPlaylists = function () {
+  checkCurrentSession().then(function(sesh) {
+    console.log(sesh.id);
+    console.log(window.location.origin);
+    window.location = window.location.origin + "/playlists/" + sesh.id;
+  });
+};
+$("#playlistsButton").on("click", findMyPlaylists);
 
 
 

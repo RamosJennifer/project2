@@ -25,12 +25,13 @@ module.exports = function(app) {
     });
   });
   // Load playlists page
-  app.get("/playlists", function(req, res) {
+  app.get("/playlists/:id/", function(req, res) {
     res.render("playlists", {
     });
   });
+  
   // Load community page
-  app.get("/community", function(req, res) {
+  app.get("/community/", function(req, res) {
     res.render("community", {
     });
   });

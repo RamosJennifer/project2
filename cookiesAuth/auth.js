@@ -81,13 +81,6 @@ app.route('/api/users/login').get(sessionChecker, (req, res) => {
         });
 });
 
-app.get('/dashboard', (req, res) => {
-    if (req.session.user && req.cookies.user_seshID) {
-        res.sendFile(__dirname + '/public/dashboard.html');
-    } else {
-        res.redirect('/login');
-    }
-});
 
 app.post('/api/users/logout', (req, res) => {
     
@@ -95,7 +88,7 @@ app.post('/api/users/logout', (req, res) => {
         res.clearCookie('user_seshID');
         res.redirect('/');
     } else {
-        res.render('login');
+        res.render('/');
     }
 });
 
@@ -116,7 +109,8 @@ app.post("/api/users/songs", function(req, res) {
     if (req.session.user && req.cookies.user_seshID) {
         res.json({
             bool: true,
-            firstName: req.session.user.firstName
+            firstName: req.session.user.firstName,
+            id: req.session.user.id
             });
     } else {
         res.json({bool: false});  

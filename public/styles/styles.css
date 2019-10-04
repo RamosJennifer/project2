@@ -37,6 +37,16 @@
   left: 15px;
   bottom: 35px;
 }
+.songDelete{
+  position: relative;
+  left: 15px;
+  bottom: 35px;
+  background: red;
+  transition: 0.2s;
+}
+.songDelete:hover {
+  background: darkred;
+}
 .songContainer {
   margin-top: 5px;
   border-radius: 5px;

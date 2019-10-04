@@ -1,3 +1,15 @@
+$(document).ready(function(){
+// Click event on 'add song' button. Function found at line 248
+  $(document).on("click", ".songAdder", addButtonClick);
+  // Choose an Emotion Dropdown
+  $('select').formSelect();
+  // Sidenav
+  $('.sidenav').sidenav();
+  // Create an Account Form
+  $('input#input_text, textarea#textarea2').characterCounter();
+  //Open Modal
+  $('.modal').modal();
+});
 var API = {
   saveUser: function(user) {
     return $.ajax({
@@ -16,15 +28,12 @@ var API = {
       },
       type: "POST",
       url: "api/users/login",
-      data: JSON.stringify(user),
-      success: function () {
-        displayWelcome();
-      }
+      data: JSON.stringify(user)
     });
   },
   logoutUser: function() {
     return $.ajax({
-      url: "api/users/logout",
+      url: "/api/users/logout",
       type: "POST"
     })
   },
@@ -39,6 +48,16 @@ var API = {
       url: "/api/songs",
       type: "GET"
     })
+  },
+  saveSong: function(song) {
+    return $.ajax({
+      headers: {
+        "Content-Type": "application/json"
+      },
+      url: "api/users/songs",
+      type: "POST",
+      data: JSON.stringify(song)
+    });
   }
 };
 
@@ -59,7 +78,7 @@ var getUsers = function () {
 
       let userLink = $("<a>")
         .text(element.username)
-        .attr("href", "/account/" + element.id);
+        .attr("href", "/playlists/" + element.id);
 
       userDiv.append(userLink);
 
@@ -74,8 +93,6 @@ getUsers();
 var getSongs = function() {
   let songs = $("#songs");
   API.getSongs().then(function(data) {
-
-    console.log(data)
 
   for (var i = 0; i < data.length; i++) {
       let songDiv = $("<div>");
@@ -108,9 +125,10 @@ var getSongs = function() {
 
       addButton.addClass("songAdder btn");
       addButton.text("+");
-      addButton.attr("data-URIsrc", data[i].URI);
+      addButton.attr("data-URIsrc", URI);
       addButton.attr("data-title", data[i].title);
       addButton.attr("data-artist", data[i].artist);
+      addButton.attr("data-emotion", data[i].emotion);
 
       songDiv.append(artist);
       songDiv.append(songname)
@@ -120,8 +138,107 @@ var getSongs = function() {
 
       songs.prepend(songDiv);
     };
-    console.log(refUserByID);
   });
 };
 
 getSongs();
+
+var addButtonClick = function() {
+
+  let thisButton = $(this);
+
+  let songToAdd = {
+    artist: $(this).attr("data-artist"),
+    title: $(this).attr("data-title"),
+    spotifyURI: $(this).attr("data-URIsrc"),
+    emotion: $(this).attr("data-emotion")
+  }
+
+  checkCurrentSession().then(function(sesh) {
+      if (!sesh.bool) {
+      $("#createAccount").show();
+      $("#modal1").show();
+      $("#modal1").css('zIndex', '200');
+      }
+      else {
+      API.saveSong(songToAdd);
+      thisButton.hide();
+      }
+  });
+};
+
+var checkCurrentSession = function() {
+  return $.ajax({
+      url: "/auth/checksession",
+      type: "POST",
+      data: {bool: null},
+      success: function(data) {
+        return (data);
+      }
+    });
+}
+
+let handleSignup = function(event) {
+  event.preventDefault();
+
+  let user = {
+    firstName: $("#firstName").val().trim(),
+    lastName: $("#lastName").val().trim(),
+    username: $("#username").val().trim(),
+    password: $("#password").val().trim()
+  };
+
+  if (!(user.username && user.password)) {
+    alert("You must enter a username and password!");
+    return;
+  };
+
+  if(user.password !== $("#password2").val().trim()) {
+    alert("Passwords do not match");
+    return;
+  };
+
+  API.saveUser(user);
+
+  $("#modal1").hide();
+  $("#firstName").val("");
+  $("#lastName").val("");
+  $("#username").val("");
+  $("#password").val("");
+  $("#password2").val("");
+};
+
+$("#createAccount").on("click", handleSignup);
+
+
+
+// Gather username / password information, pass to API.loginUser method
+let handleLogin = function() {
+  event.preventDefault();
+  let username = $("#usernameLogin").val().trim();
+  let password = $("#passwordLogin").val().trim();
+  let user = {
+    username: username,
+    password: password
+  }
+  API.loginUser(user);
+};
+
+$("#submitLogin").on("click", handleLogin);
+
+
+
+let handleLogout = function() {
+  API.logoutUser();
+};
+$("#logoutButton").on("click", handleLogout);
+
+
+let findMyPlaylists = function () {
+  checkCurrentSession().then(function(sesh) {
+    console.log(sesh.id);
+    console.log(window.location.origin);
+    window.location = window.location.origin + "/playlists/" + sesh.id;
+  });
+};
+$("#playlistsButton").on("click", findMyPlaylists);
