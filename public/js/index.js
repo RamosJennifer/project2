@@ -176,14 +176,13 @@ var handleArtistSearch = function () {
   var emotion = $('select').val();
 
   return $.ajax({
-      type: "POST",
-      url: "/pullsongs",
-      data: {artist: artist},
-      success: function(data) {
-        filterSongs(data, emotion);
-      }
-    });
-  
+    type: "POST",
+    url: "/pullsongs",
+    data: {artist: artist},
+    success: function(data) {
+      filterSongs(data, emotion);
+    }
+  });
 };
 
 var filterSongs = function (data, emotion) {
@@ -225,7 +224,7 @@ var displaySongs = function (data) {
       let songDiv = $("<div>");
       let spotifyPlayer = $("<iframe>");
       let songname = $("<h4>");
-      let artist = $("<h4>");
+      let artist = $("<h5>");
       let addButton = $("<button>");
       let URI = data[i].URI;
 
@@ -238,14 +237,14 @@ var displaySongs = function (data) {
 
       songname.text(data[i].title);
       artist.text(data[i].artist);
-      addButton.addClass("songAdder");
-      addButton.text("Add this track");
+      addButton.addClass("songAdder btn");
+      addButton.text("+");
       addButton.attr("data-URIsrc", data[i].URI.toString().slice(14));
       addButton.attr("data-title", data[i].title);
       addButton.attr("data-artist", data[i].artist);
 
-      songDiv.append(songname)
       songDiv.append(artist);
+      songDiv.append(songname)
       songDiv.append(spotifyPlayer);
       songDiv.append(addButton);
 
@@ -261,8 +260,8 @@ var addButtonClick = function() {
   let emotion = $('select').val();
 
   let songToAdd = {
-    title: $(this).attr("data-title"),
     artist: $(this).attr("data-artist"),
+    title: $(this).attr("data-title"),
     spotifyURI: $(this).attr("data-URIsrc"),
     emotion: emotion
   }
