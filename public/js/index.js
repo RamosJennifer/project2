@@ -298,7 +298,7 @@ var addButtonClick = function() {
 
 var checkCurrentSession = function() {
   return $.ajax({
-      url: "/tester",
+      url: "/auth/checksession",
       type: "POST",
       data: {bool: null},
       success: function(data) {
@@ -306,6 +306,7 @@ var checkCurrentSession = function() {
       }
     });
 }
+
 
 
 
