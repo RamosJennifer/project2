@@ -8,7 +8,7 @@ const spotify = new SpotifyWebApi(keys.spotify);
 module.exports = function (app) {
 
   // ================================= Song Routes ======================================
-
+console.log('newbranch');
   // Get all songs
   app.get("/api/songs", function (req, res) {
     db.Song.findAll({}).then(function (songs) {
