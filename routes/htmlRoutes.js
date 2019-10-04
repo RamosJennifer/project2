@@ -5,7 +5,6 @@ module.exports = function(app) {
   app.get("/", function(req, res) {
     db.Song.findAll({}).then(function(dbExamples) {
       res.render("index", {
-        msg: "Welcome!",
         examples: dbExamples
       });
     });
@@ -17,6 +16,22 @@ module.exports = function(app) {
       res.render("example", {
         example: dbExample
       });
+    });
+  });
+  
+  // Load account page
+  app.get("/account", function(req, res) {
+    res.render("account", {
+    });
+  });
+  // Load playlists page
+  app.get("/playlists", function(req, res) {
+    res.render("playlists", {
+    });
+  });
+  // Load community page
+  app.get("/community", function(req, res) {
+    res.render("community", {
     });
   });
 
