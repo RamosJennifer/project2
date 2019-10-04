@@ -20,7 +20,7 @@ module.exports = function(app) {
   });
   
   // Load account page
-  app.get("/account", function(req, res) {
+  app.get("/account/:id", function(req, res) {
     res.render("account", {
     });
   });

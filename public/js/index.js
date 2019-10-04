@@ -48,6 +48,22 @@ var API = {
       type: "GET"
     });
   },
+  getOneUser: function(userID) {
+    return $.ajax({
+      url: "api/users/" + userID,
+      type: "GET"
+    });
+  },
+  updateUserInfo: function(userID, formData) {
+    return $.ajax({
+      url: "api/userinfo/" + userID,
+      type: "PUT",
+      data: JSON.stringify(formData),
+      success: function () {
+        renderUserInfo()
+      }
+    })
+  },
   deleteUser: function(userID) {
     return $.ajax({
       url: "api/users/" + userID,
@@ -322,6 +338,30 @@ var displayWelcome = function() {
   });
 };
 displayWelcome();
+
+
+var getUsers = function () {
+  let test = $("#test");
+  API.getUsers().then(function(data) {
+    data.forEach(element => {
+      let userDiv = $("<div>")
+        .attr({class: "user-container", "data-id": element.id});
+
+      let userLink = $("<a>")
+        .text(element.username)
+        .attr("href", "/account/" + element.id);
+
+      userDiv.append(userLink);
+
+      test.append(userDiv);
+
+    });
+  });
+};
+
+getUsers();
+
+
 
 
 

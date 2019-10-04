@@ -75,13 +75,14 @@ module.exports = function (app) {
     db.User.findAll({
       include:
         db.Song
-    }).then(function (songs) {
-      res.json(songs);
+    }).then(function (users) {
+      res.json(users);
     });
   });
 
   // Get specific user and all their songs
   app.get('/api/users/:id', function (req, res) {
+    console.log('hit');
     db.User.findOne({
       where: {
         id: req.params.id
@@ -101,7 +102,6 @@ module.exports = function (app) {
         }
       }).then(function (users) {
         res.json(users);
-        console.log(users);
       });
   });
 
