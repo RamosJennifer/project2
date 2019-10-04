@@ -172,7 +172,7 @@ var handleDeleteBtnClick = function() {
 var handleArtistSearch = function () {
   
   event.preventDefault();
-  var artist = $("#textarea1").val();
+  var artist = $("#searchArtist").val();
   var emotion = $('select').val();
 
   return $.ajax({
