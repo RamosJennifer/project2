@@ -340,27 +340,6 @@ var displayWelcome = function() {
 displayWelcome();
 
 
-var getUsers = function () {
-  let test = $("#test");
-  API.getUsers().then(function(data) {
-    data.forEach(element => {
-      let userDiv = $("<div>")
-        .attr({class: "user-container", "data-id": element.id});
-
-      let userLink = $("<a>")
-        .text(element.username)
-        .attr("href", "/account/" + element.id);
-
-      userDiv.append(userLink);
-
-      test.append(userDiv);
-
-    });
-  });
-};
-
-getUsers();
-
 
 
 
