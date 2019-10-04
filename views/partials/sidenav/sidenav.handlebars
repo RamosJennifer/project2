@@ -16,22 +16,29 @@
         <img src="images/office.jpg">
       </div>
       <a href="#user"><img class="circle" src="images/yuna.jpg"></a>
-      <a href="#name">Jane Doe</a>
+      <p for="#name">Jane Doe</p>
     </div>
   </li>
-  <li><a class="waves-effect"href="#!">My Account</a></li>
+  {{!-- Divider --}}
   <li><div class="divider"></div></li>
-  <!-- Find Better Solution -->
+  <li><a class="waves-effect"href="#!">My Account</a></li>
+  <li><a class="waves-effect"href="#!">My Community</a></li>
   <div>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <br><br><br>
   </div>
-
-  	<li>
+  <li><a class="waves-effect"href="#!">Happy Playlist</a></li>
+  <li><a class="waves-effect"href="#!">Sad Playlist</a></li>
+  <li><a class="waves-effect"href="#!">Mad Playlist</a></li>
+  {{!-- FIND BETTER SOLUTION --}}
+  <div>
+    <br><br><br><br><br>
+  </div>
+  <li>
 		<a class="waves-effect waves-light modal-trigger login" href="#modal2">Login</a>
 	</li>
-    <li>
-        <a class="waves-effect waves-light modal-trigger" href="#modal1">Create Account</a>
-    </li>
+  <li>
+    <a class="waves-effect waves-light modal-trigger" href="#modal1">Create Account</a>
+  </li>
 </ul>
 {{>createAccount/createAccount}}
 {{>login/login}}

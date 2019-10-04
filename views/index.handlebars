@@ -2,10 +2,10 @@
 <div id="home">
   <div class="container">
     <div class="row">
-      <div class="col l8 offset-2">
+      <div class="col l6 offset-l2">
         {{!-- Header --}}
         <h1>TheraTune</h1>
-        <form class="clearfix mb-4" action="POST">
+        <form class="clearfix mb-4 searchForm" action="POST">
           <div class="form-group">
             <div class="input-field col s12">
               {{!-- Select an Emotion --}}
@@ -18,8 +18,8 @@
             </div>
             <div class="input-field col s12">
               {{!-- Search By Artist --}}
-              <textarea id="textarea1" class="materialize-textarea"></textarea>
-              <label for="textarea1">Search by Artist</label>
+              <input id="searchArtist" type="text">
+              <label for="searchArtist">Search by Artist</label>
             </div>
           </div>
           {{!-- Search Button --}}
@@ -27,12 +27,10 @@
         </form>
       </div>
     </div>
-    <textarea id="username"></textarea>
-    <textarea id="password"></textarea>
-    <button id="subLog">submit</button>
-    <h3>Results:</h3>
-    <div id="resultsArea">
-      {{!-- Display Input Here --}}
+    <div class="row">
+      <div class="col l6 offset-l2">
+        <div id="resultsArea">{{!-- Display Results Here --}}</div>
+      </div>
     </div>
   </div>
 </div>
