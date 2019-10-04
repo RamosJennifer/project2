@@ -172,18 +172,17 @@ var handleDeleteBtnClick = function() {
 var handleArtistSearch = function () {
   
   event.preventDefault();
-  var artist = $("#textarea1").val();
+  var artist = $("#searchArtist").val();
   var emotion = $('select').val();
 
   return $.ajax({
-      type: "POST",
-      url: "/pullsongs",
-      data: {artist: artist},
-      success: function(data) {
-        filterSongs(data, emotion);
-      }
-    });
-  
+    type: "POST",
+    url: "/pullsongs",
+    data: {artist: artist},
+    success: function(data) {
+      filterSongs(data, emotion);
+    }
+  });
 };
 
 var filterSongs = function (data, emotion) {
@@ -224,8 +223,8 @@ var displaySongs = function (data) {
     for (var i = 0; i < data.length; i++) {
       let songDiv = $("<div>");
       let spotifyPlayer = $("<iframe>");
-      let songname = $("<h4>");
-      let artist = $("<h4>");
+      let songname = $("<h5>");
+      let artist = $("<h6>");
       let addButton = $("<button>");
       let URI = data[i].URI;
 
@@ -236,16 +235,20 @@ var displaySongs = function (data) {
       spotifyPlayer.attr('allowtransparency', 'true');
       spotifyPlayer.attr('allow', 'encrypted-media');
 
+      songname.addClass("songnameH");
       songname.text(data[i].title);
+
+      artist.addClass("artistH");
       artist.text(data[i].artist);
-      addButton.addClass("songAdder");
-      addButton.text("Add this track");
+
+      addButton.addClass("songAdder btn");
+      addButton.text("+");
       addButton.attr("data-URIsrc", data[i].URI.toString().slice(14));
       addButton.attr("data-title", data[i].title);
       addButton.attr("data-artist", data[i].artist);
 
-      songDiv.append(songname)
       songDiv.append(artist);
+      songDiv.append(songname)
       songDiv.append(spotifyPlayer);
       songDiv.append(addButton);
 
@@ -261,8 +264,8 @@ var addButtonClick = function() {
   let emotion = $('select').val();
 
   let songToAdd = {
-    title: $(this).attr("data-title"),
     artist: $(this).attr("data-artist"),
+    title: $(this).attr("data-title"),
     spotifyURI: $(this).attr("data-URIsrc"),
     emotion: emotion
   }
