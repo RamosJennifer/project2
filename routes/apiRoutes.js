@@ -23,6 +23,7 @@ module.exports = function (app) {
   // Get all songs by emotion
   app.get("/api/songsbyemotion/:emotion", function (req, res) {
     db.Song.findAll({ where: { emotion: req.params.emotion } }).then(function (songs) {
+      res.json(songs);
     });
   });
   // Get all users

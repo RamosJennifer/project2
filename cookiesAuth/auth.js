@@ -78,7 +78,8 @@ app.route('/api/users/login').get(sessionChecker, (req, res) => {
 
         db.User.findOne({where: {username: username} }).then(function(user) {
             if (!user) {
-                res.render('login');
+                // res.render('login');
+                res.send('a');
             } else {
                 bcrypt.compare(req.body.password, user.password, function(err, result) {
                     if (result == true) {

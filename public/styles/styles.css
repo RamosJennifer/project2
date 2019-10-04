@@ -30,6 +30,6 @@
   border-bottom: 3px solid #008B8B;
   background-color: rgb(227, 231, 235);
 }
-.songAdder{
+.songAdderbtn, .btn{
   margin: 5px;
 }

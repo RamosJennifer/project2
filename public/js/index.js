@@ -129,14 +129,14 @@ let handleSignup = function(event) {
   $("#password").val("");
 };
 
-$("#submitSignup").on("click", handleSignup);
+$("#createAccount").on("click", handleSignup);
 
 
 
 // Gather username / password information, pass to API.loginUser method
 let handleLogin = function() {
-  let username = $("#username").val().trim();
-  let password = $("#password").val().trim();
+  let username = $("#usernameLogin").val().trim();
+  let password = $("#passwordLogin").val().trim();
   let user = {
     username: username,
     password: password
@@ -144,7 +144,7 @@ let handleLogin = function() {
   API.loginUser(user);
 };
 
-$("#subLog").on("click", handleLogin);
+$("#submitLogin").on("click", handleLogin);
 
 
 
@@ -261,6 +261,7 @@ $("#submitArtist").on("click", handleArtistSearch);
 
 // Store song information / pass to API.saveSong method
 var addButtonClick = function() {
+
   let emotion = $('select').val();
 
   let songToAdd = {
