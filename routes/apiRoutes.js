@@ -81,7 +81,7 @@ module.exports = function (app) {
   });
 
   // Get specific user and all their songs
-  app.get('/api/users/:id', function (req, res) {
+  app.get("/api/users/:id", function (req, res) {
     db.User.findOne({
       where: {
         id: req.params.id
@@ -93,7 +93,7 @@ module.exports = function (app) {
   });
 
   // Edit user information
-  app.put("/api/userinfo/:id", function (req, res) {
+  app.put("/api/users/edit/:id", function (req, res) {
     db.User.update(req.body,
       {
         where: {
@@ -105,6 +105,22 @@ module.exports = function (app) {
       });
   });
 
+  // Delete a user and their songs
+  app.delete("/api/users/delete/:id", function (req, res) {
+    db.Song.destroy({
+      where: {
+        UserId: req.params.id
+      }
+    }).then(function (songs) {
+      db.User.destroy({
+        where: {
+          id: req.params.id
+        }
+      }).then(function (users) {
+        res.json(users);
+      });
+    });
+  });
   // ================================= Spotify Route ======================================
 
   // Spotify API call, grabbing songs and sending to client to be filtered
@@ -186,5 +202,4 @@ module.exports = function (app) {
     }
 
   });
-
 };
