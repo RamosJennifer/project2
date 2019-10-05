@@ -85,7 +85,7 @@ var getUsers = function () {
         });
 
       let userDiv = $("<div>")
-        .attr({class: "user-container", "data-id": element.id});
+        .attr({class: "user-container collection-item", "data-id": element.id});
 
       let userLink = $("<a>")
         .text(element.username)
