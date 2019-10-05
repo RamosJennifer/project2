@@ -75,8 +75,8 @@ module.exports = function (app) {
     db.User.findAll({
       include:
         db.Song
-    }).then(function (songs) {
-      res.json(songs);
+    }).then(function (users) {
+      res.json(users);
     });
   });
 
@@ -101,7 +101,6 @@ module.exports = function (app) {
         }
       }).then(function (users) {
         res.json(users);
-        console.log(users);
       });
   });
 

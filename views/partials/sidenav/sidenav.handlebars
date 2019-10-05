@@ -24,9 +24,9 @@
   {{!-- Divider --}}
   <li><div class="divider"></div></li>
   {{!-- Playlists --}}
-  <li><a class="waves-effect"href="#!">Playlists</a></li>
+  <li><a class="waves-effect" id="playlistsButton">Playlists</a></li>
   {{!-- Community --}}
-  <li><a class="waves-effect"href="#!">Community</a></li>
+  <li><a class="waves-effect"href="/community">Community</a></li>
   
   <br><br><br><br><br><br><br><br><br>
   <br>
@@ -37,6 +37,9 @@
   <li>
     <a class="waves-effect waves-light modal-trigger" href="#modal1">Create Account</a>
   </li>
+  <li>
+		<a class="waves-effect waves-light" href="#!" id="logoutButton">Logout</a>
+	</li>
 </ul>
 {{>createAccount/createAccount}}
 {{>login/login}}

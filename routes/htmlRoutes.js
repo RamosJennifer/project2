@@ -20,18 +20,26 @@ module.exports = function(app) {
   });
   
   // Load account page
-  app.get("/account", function(req, res) {
+  app.get("/account/:id", function(req, res) {
     res.render("account", {
     });
   });
   // Load playlists page
-  app.get("/playlists", function(req, res) {
+  app.get("/playlists/:id/", function(req, res) {
     res.render("playlists", {
     });
   });
+  
   // Load community page
-  app.get("/community", function(req, res) {
+  app.get("/community/", function(req, res) {
     res.render("community", {
+    });
+  });
+
+  app.get("/tester", function(req, res) {
+    console.log('test');
+    res.render("index", {
+      renderModal: 'false'
     });
   });
 

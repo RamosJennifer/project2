@@ -34,19 +34,6 @@ var sessionChecker = (req, res, next) => {
 app.route('/api/users/signup').get(sessionChecker, (req, res) => {
     res.render('signup');
 }).post((req, res) => {
-    // db.User.create({
-    //     firstName: req.body.firstName,
-    //     lastName: req.body.lastName,
-    //     username: req.body.username,
-    //     password: req.body.password
-    // }).then(user => {
-    //     req.session.user = user.Datavalues;
-    //     res.redirect('/');
-    //     //res.send('signedup');
-    // }).catch(error => {
-    //     res.send(error);
-    // });
-    //
     db.User.findOne({
       where: { username: req.body.username}
     }).then(function(checkForUser) {
@@ -94,13 +81,6 @@ app.route('/api/users/login').get(sessionChecker, (req, res) => {
         });
 });
 
-app.get('/dashboard', (req, res) => {
-    if (req.session.user && req.cookies.user_seshID) {
-        res.sendFile(__dirname + '/public/dashboard.html');
-    } else {
-        res.redirect('/login');
-    }
-});
 
 app.post('/api/users/logout', (req, res) => {
     
@@ -108,7 +88,7 @@ app.post('/api/users/logout', (req, res) => {
         res.clearCookie('user_seshID');
         res.redirect('/');
     } else {
-        res.render('login');
+        res.render('/');
     }
 });
 
@@ -122,6 +102,19 @@ app.post("/api/users/songs", function(req, res) {
       }).then(function(newSong) {
       res.json(newSong)
     });
+  });
+
+  app.post("/auth/checksession", function(req, res) {
+      console.log('ping');
+    if (req.session.user && req.cookies.user_seshID) {
+        res.json({
+            bool: true,
+            firstName: req.session.user.firstName,
+            id: req.session.user.id
+            });
+    } else {
+        res.json({bool: false});  
+    }
   });
 
 app.use(function (req, res, next) {

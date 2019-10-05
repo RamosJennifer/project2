@@ -5,6 +5,8 @@
 .hamburger {
   display: inline-block;
   cursor: pointer;
+  margin-top: 5px;
+  margin-left: 10px;
 }
 /* Bars for the Menu Icon */
 .bar1, .bar2, .bar3 {
@@ -30,6 +32,28 @@
   border-bottom: 3px solid #008B8B;
   background-color: rgb(227, 231, 235);
 }
-.songAdderbtn, .btn{
-  margin: 5px;
+.songAdder{
+  position: relative;
+  left: 15px;
+  bottom: 35px;
+}
+.songDelete{
+  position: relative;
+  left: 15px;
+  bottom: 35px;
+  background: red;
+  transition: 0.2s;
+}
+.songDelete:hover {
+  background: darkred;
+}
+.songContainer {
+  margin-top: 5px;
+  border-radius: 5px;
+  transition: 0.3s;
+}
+
+.songContainer:hover {
+  border-left: 3px solid #008B8B;
+  background: lightgray;
 }

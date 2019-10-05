@@ -30,7 +30,10 @@ var API = {
       },
       type: "POST",
       url: "api/users/login",
-      data: JSON.stringify(user)
+      data: JSON.stringify(user),
+      success: function () {
+        displayWelcome();
+      }
     });
   },
   logoutUser: function() {
@@ -44,6 +47,22 @@ var API = {
       url: "api/users",
       type: "GET"
     });
+  },
+  getOneUser: function(userID) {
+    return $.ajax({
+      url: "api/users/" + userID,
+      type: "GET"
+    });
+  },
+  updateUserInfo: function(userID, formData) {
+    return $.ajax({
+      url: "api/userinfo/" + userID,
+      type: "PUT",
+      data: JSON.stringify(formData),
+      success: function () {
+        renderUserInfo()
+      }
+    })
   },
   deleteUser: function(userID) {
     return $.ajax({
@@ -119,14 +138,21 @@ let handleSignup = function(event) {
   if (!(user.username && user.password)) {
     alert("You must enter a username and password!");
     return;
-  }
+  };
+
+  if(user.password !== $("#password2").val().trim()) {
+    alert("Passwords do not match");
+    return;
+  };
 
   API.saveUser(user);
 
+  $("#modal1").hide();
   $("#firstName").val("");
   $("#lastName").val("");
   $("#username").val("");
   $("#password").val("");
+  $("#password2").val("");
 };
 
 $("#createAccount").on("click", handleSignup);
@@ -135,6 +161,7 @@ $("#createAccount").on("click", handleSignup);
 
 // Gather username / password information, pass to API.loginUser method
 let handleLogin = function() {
+  event.preventDefault();
   let username = $("#usernameLogin").val().trim();
   let password = $("#passwordLogin").val().trim();
   let user = {
@@ -151,6 +178,7 @@ $("#submitLogin").on("click", handleLogin);
 let handleLogout = function() {
   API.logoutUser();
 };
+$("#logoutButton").on("click", handleLogout);
 
 
 // handleDeleteBtnClick is called when an example's delete button is clicked
@@ -235,6 +263,7 @@ var displaySongs = function (data) {
       spotifyPlayer.attr('allowtransparency', 'true');
       spotifyPlayer.attr('allow', 'encrypted-media');
 
+      songDiv.addClass("songContainer");
       songname.addClass("songnameH");
       songname.text(data[i].title);
 
@@ -262,6 +291,8 @@ $("#submitArtist").on("click", handleArtistSearch);
 // Store song information / pass to API.saveSong method
 var addButtonClick = function() {
 
+  let thisButton = $(this).parent();
+
   let emotion = $('select').val();
 
   let songToAdd = {
@@ -271,10 +302,55 @@ var addButtonClick = function() {
     emotion: emotion
   }
 
-  API.saveSong(songToAdd);
-
-  $(this).hide();
+  checkCurrentSession().then(function(sesh) {
+    console.log(sesh.bool);
+      if (!sesh.bool) {
+      $("#createAccount").show();
+      $("#modal1").show();
+      $("#modal1").css('zIndex', '200');
+      }
+      else {
+      API.saveSong(songToAdd);
+      thisButton.hide();
+      }
+  });
 };
+
+var checkCurrentSession = function() {
+  return $.ajax({
+      url: "/auth/checksession",
+      type: "POST",
+      data: {bool: null},
+      success: function(data) {
+        return (data);
+      }
+    });
+}
+
+let welcomeMessage = $("#welcome");
+var displayWelcome = function() {
+  checkCurrentSession().then(function(sesh) {
+    console.log(sesh.firstName);
+    if (sesh.firstName) {
+      welcomeMessage.text("Hi, " + sesh.firstName + ", welcome back");
+    } else {
+      welcomeMessage.text("Welcome! Create an account or Login to discover and save songs");
+    }
+  });
+};
+displayWelcome();
+
+let findMyPlaylists = function () {
+  checkCurrentSession().then(function(sesh) {
+    console.log(sesh.id);
+    console.log(window.location.origin);
+    window.location = window.location.origin + "/playlists/" + sesh.id;
+  });
+};
+$("#playlistsButton").on("click", findMyPlaylists);
+
+
+
 
 
 
