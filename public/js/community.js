@@ -165,7 +165,7 @@ displayWelcome();
 var refUserByID = [];
 
 var getUsers = function () {
-  let test = $("#test");
+  let test = $("#testComm");
   API.getUsers().then(function(data) {
     data.forEach(element => {
 
