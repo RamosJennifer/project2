@@ -1,6 +1,7 @@
 $(document).ready(function(){
 // Click event on 'add song' button. Function found at line 248
   $(document).on("click", ".songDelete", handleDeleteSong);
+  $(document).on("click", ".songAdder", addButtonClick);
   // Choose an Emotion Dropdown
   $('select').formSelect();
   // Sidenav
@@ -30,7 +31,7 @@ var API = {
       url: "/api/users/login",
       data: JSON.stringify(user),
       success: function() {
-          renderPlaylists()
+          findMyPlaylists();
       }
     });
   },
@@ -40,20 +41,31 @@ var API = {
       type: "POST"
     })
   },
-  getUsers: function() {
-    return $.ajax({
-      url: "/api/users",
-      type: "GET"
-    });
-  },
   getOneUser: function(userID) {
     return $.ajax({
       url: "/api/users/" + userID,
       type: "GET"
     });
   },
+  saveSong: function(song) {
+    return $.ajax({
+      headers: {
+        "Content-Type": "application/json"
+      },
+      url: "/api/users/songs",
+      type: "POST",
+      data: JSON.stringify(song)
+    });
+  },
+  deleteSong: function(songID) {
+    return $.ajax({
+      url: "/api/songs/deletebyid/" + songID,
+      type: "DELETE"
+    });
+  }
 };
 
+// checks to see if a user is in session
 var checkCurrentSession = function() {
   return $.ajax({
       url: "/auth/checksession",
@@ -147,6 +159,8 @@ checkCurrentSession().then(function(sesh) {
 getUser();
 
 let handleDeleteSong = function() {
+  API.deleteSong($(this).attr("data-id"));
+  $(this).parent().hide();
 };
 
 
@@ -160,8 +174,8 @@ let handleSignup = function(event) {
     password: $("#password").val().trim()
   };
 
-  if (!(user.username && user.password)) {
-    alert("You must enter a username and password!");
+  if (!(user.username && user.password && user.firstName && user.lastName)) {
+    alert("All fields are required");
     return;
   };
 
@@ -202,15 +216,53 @@ $("#submitLogin").on("click", handleLogin);
 
 let handleLogout = function() {
   API.logoutUser();
+  window.location = window.location.origin;
 };
 $("#logoutButton").on("click", handleLogout);
 
 
 let findMyPlaylists = function () {
   checkCurrentSession().then(function(sesh) {
-    console.log(sesh.id);
-    console.log(window.location.origin);
     window.location = window.location.origin + "/playlists/" + sesh.id;
   });
 };
 $("#playlistsButton").on("click", findMyPlaylists);
+
+
+var addButtonClick = function() {
+
+  let thisButton = $(this);
+
+  let emotion = $(this).attr("data-emotion");
+
+  let songToAdd = {
+    artist: $(this).attr("data-artist"),
+    title: $(this).attr("data-title"),
+    spotifyURI: $(this).attr("data-URIsrc"),
+    emotion: emotion
+  }
+
+  checkCurrentSession().then(function(sesh) {
+      if (!sesh.bool) {
+      $("#createAccount").show();
+      $("#modal1").show();
+      $("#modal1").css('zIndex', '200');
+      }
+      else {
+      API.saveSong(songToAdd);
+      thisButton.hide();
+      }
+  });
+};
+
+let navName = $("#navName");
+var displayWelcome = function() {
+  checkCurrentSession().then(function(sesh) {
+    if (sesh.firstName) {
+      navName.text(sesh.firstName);
+    } else {
+      navName.text("");
+    }
+  });
+};
+displayWelcome();
