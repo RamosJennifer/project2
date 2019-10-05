@@ -1,14 +1,54 @@
-{{>sidenav/sidenav}}
-<p>PLAYLISTS</p>
+<div class="snPlaylistsHB">
+    {{>sidenav/sidenav}}
+</div>
+<div id="blue" class="block blue">
+  <nav class="pushpin-demo-nav" data-target="blue">
+    <div class="nav-wrapper light-blue">
+      <div class="container">
+        <a href="#" class="brand-logo">Sad</a>
+      </div>
+    </div>
+    <div id="mad">
+        {{!-- Show User's Sad Songs Here --}}
+    </div>
+  </nav>
+</div>
+
+<div id="red" class="block red lighten-1">
+  <nav class="pushpin-demo-nav" data-target="red">
+    <div class="nav-wrapper red">
+      <div class="container">
+        <a href="#" class="brand-logo">Mad</a>
+      </div>
+    </div>
+    <div id="sad">
+        {{!-- Show User's Mad Songs Here --}}
+    </div>
+  </nav>
+</div>
+
+<div id="green" class="block green lighten-1">
+  <nav class="pushpin-demo-nav" data-target="green">
+    <div class="nav-wrapper green">
+      <div class="container">
+        <a href="#" class="brand-logo">Happy</a>
+      </div>
+    </div>
+    <div id="happy">
+        {{!-- Show User's Happy Songs Here --}}
+    </div>
+  </nav>
+</div>
 <div id="test"></div>
-<div id="happy">
-<h3>Happy</h3>
-</div>
-<div id="sad">
-<h3>Sad</h3>
-</div>
-<div id="mad">
-<h3>Mad</h3>
-</div>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="/js/playlists.js"></script>
+
+<style>
+    html, body, .block {
+        height: 100%;
+    }
+    nav ul li a:hover, nav ul li a.active {
+        background-color: rgba(0,0,0,.1);
+    }
+    footer {
+        padding-left: 0;
+    }
+</style>
