@@ -9,6 +9,17 @@ $(document).ready(function(){
   $('input#input_text, textarea#textarea2').characterCounter();
   //Open Modal
   $('.modal').modal();
+  // Playlists Page
+  $('.pushpin').pushpin();
+   // Plalists Page
+   $('.pushpin-demo-nav').each(function() {
+    var $this = $(this);
+    var $target = $('#' + $(this).attr('data-target'));
+    $this.pushpin({
+      top: $target.offset().top,
+      bottom: $target.offset().top + $target.outerHeight() - $this.height()
+    });
+  });
 });
 var API = {
   saveUser: function(user) {
