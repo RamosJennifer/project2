@@ -57,3 +57,11 @@
   border-left: 3px solid #008B8B;
   background: lightgray;
 }
+#songsComm {
+float: right;
+width: 49%;
+}
+#test {
+  float: left;
+  width: 48%;
+}
