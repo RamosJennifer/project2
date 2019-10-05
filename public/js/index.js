@@ -9,6 +9,16 @@ $(document).ready(function(){
   $('input#input_text, textarea#textarea2').characterCounter();
   //Open Modal
   $('.modal').modal();
+  $('.pushpin').pushpin();
+  // Plalists Page
+  $('.pushpin-demo-nav').each(function() {
+   var $this = $(this);
+   var $target = $('#' + $(this).attr('data-target'));
+   $this.pushpin({
+     top: $target.offset().top,
+     bottom: $target.offset().top + $target.outerHeight() - $this.height()
+   });
+ });
 });
 
 // The API object contains methods for each kind of request we'll make
