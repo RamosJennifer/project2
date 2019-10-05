@@ -192,7 +192,7 @@ getUsers();
 // parsing through all song information, finding match of song.UserId to previously stored id + first name
 // to show which user added the song to which playlist
 var getSongs = function() {
-  let songs = $("#songs");
+  let songs = $("#songsComm");
   API.getSongs().then(function(data) {
 
   for (var i = 0; i < data.length; i++) {
