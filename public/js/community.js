@@ -28,7 +28,10 @@ var API = {
       },
       type: "POST",
       url: "api/users/login",
-      data: JSON.stringify(user)
+      data: JSON.stringify(user),
+      success: function() {
+        displayWelcome();
+      }
     });
   },
   logoutUser: function() {
@@ -61,6 +64,104 @@ var API = {
   }
 };
 
+// checks to see if a user is in session
+var checkCurrentSession = function() {
+  return $.ajax({
+      url: "/auth/checksession",
+      type: "POST",
+      data: {bool: null},
+      success: function(data) {
+        return (data);
+      }
+    });
+};
+
+
+// Sign-up user onclick / pass to API.saveUser method
+let handleSignup = function(event) {
+  event.preventDefault();
+
+  let user = {
+    firstName: $("#firstName").val().trim(),
+    lastName: $("#lastName").val().trim(),
+    username: $("#username").val().trim(),
+    password: $("#password").val().trim()
+  };
+
+  if (!(user.username && user.password && user.firstName && user.lastName)) {
+    alert("All fields are required");
+    return;
+  };
+
+  if(user.password !== $("#password2").val().trim()) {
+    alert("Passwords do not match");
+    return;
+  };
+
+  API.saveUser(user);
+
+  $("#modal1").hide();
+  $("#firstName").val("");
+  $("#lastName").val("");
+  $("#username").val("");
+  $("#password").val("");
+  $("#password2").val("");
+};
+$("#createAccount").on("click", handleSignup);
+
+
+// Gather username / password information, pass to API.loginUser method
+let handleLogin = function() {
+  event.preventDefault();
+  let username = $("#usernameLogin").val().trim();
+  let password = $("#passwordLogin").val().trim();
+  let user = {
+    username: username,
+    password: password
+  }
+  API.loginUser(user);
+};
+$("#submitLogin").on("click", handleLogin);
+
+
+// Handle user logout, redirect to home page
+let handleLogout = function() {
+  API.logoutUser();
+  window.location = window.location.origin;
+};
+$("#logoutButton").on("click", handleLogout);
+
+
+// Method to redirect user to their own playlists page
+let findMyPlaylists = function () {
+  checkCurrentSession().then(function(sesh) {
+    if(sesh.bool) {
+    window.location = window.location.origin + "/playlists/" + sesh.id;
+    } else {
+      $("#createAccount").show();
+      $("#modal1").show();
+      $("#modal1").css('zIndex', '200');
+      }
+  });
+};
+$("#playlistsButton").on("click", findMyPlaylists);
+
+
+// Set navbar to include user's name
+let navName = $("#navName");
+var displayWelcome = function() {
+  checkCurrentSession().then(function(sesh) {
+    if (sesh.firstName) {
+      navName.text(sesh.firstName);
+    } else {
+      navName.text("");
+    }
+  });
+};
+displayWelcome();
+
+
+// Storing user first name and id to later refererence when showing song information
 var refUserByID = [];
 
 var getUsers = function () {
@@ -83,13 +184,13 @@ var getUsers = function () {
       userDiv.append(userLink);
 
       test.append(userDiv);
-
     });
   });
 };
-
 getUsers();
 
+// parsing through all song information, finding match of song.UserId to previously stored id + first name
+// to show which user added the song to which playlist
 var getSongs = function() {
   let songs = $("#songs");
   API.getSongs().then(function(data) {
@@ -140,9 +241,10 @@ var getSongs = function() {
     };
   });
 };
-
 getSongs();
 
+
+// Handling a song add to a user's tracks
 var addButtonClick = function() {
 
   let thisButton = $(this);
@@ -166,79 +268,3 @@ var addButtonClick = function() {
       }
   });
 };
-
-var checkCurrentSession = function() {
-  return $.ajax({
-      url: "/auth/checksession",
-      type: "POST",
-      data: {bool: null},
-      success: function(data) {
-        return (data);
-      }
-    });
-}
-
-let handleSignup = function(event) {
-  event.preventDefault();
-
-  let user = {
-    firstName: $("#firstName").val().trim(),
-    lastName: $("#lastName").val().trim(),
-    username: $("#username").val().trim(),
-    password: $("#password").val().trim()
-  };
-
-  if (!(user.username && user.password)) {
-    alert("You must enter a username and password!");
-    return;
-  };
-
-  if(user.password !== $("#password2").val().trim()) {
-    alert("Passwords do not match");
-    return;
-  };
-
-  API.saveUser(user);
-
-  $("#modal1").hide();
-  $("#firstName").val("");
-  $("#lastName").val("");
-  $("#username").val("");
-  $("#password").val("");
-  $("#password2").val("");
-};
-
-$("#createAccount").on("click", handleSignup);
-
-
-
-// Gather username / password information, pass to API.loginUser method
-let handleLogin = function() {
-  event.preventDefault();
-  let username = $("#usernameLogin").val().trim();
-  let password = $("#passwordLogin").val().trim();
-  let user = {
-    username: username,
-    password: password
-  }
-  API.loginUser(user);
-};
-
-$("#submitLogin").on("click", handleLogin);
-
-
-
-let handleLogout = function() {
-  API.logoutUser();
-};
-$("#logoutButton").on("click", handleLogout);
-
-
-let findMyPlaylists = function () {
-  checkCurrentSession().then(function(sesh) {
-    console.log(sesh.id);
-    console.log(window.location.origin);
-    window.location = window.location.origin + "/playlists/" + sesh.id;
-  });
-};
-$("#playlistsButton").on("click", findMyPlaylists);

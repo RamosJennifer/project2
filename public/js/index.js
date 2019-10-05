@@ -42,34 +42,22 @@ var API = {
       type: "POST"
     })
   },
-  getUsers: function() {
-    return $.ajax({
-      url: "api/users",
-      type: "GET"
-    });
-  },
-  getOneUser: function(userID) {
-    return $.ajax({
-      url: "api/users/" + userID,
-      type: "GET"
-    });
-  },
-  updateUserInfo: function(userID, formData) {
-    return $.ajax({
-      url: "api/userinfo/" + userID,
-      type: "PUT",
-      data: JSON.stringify(formData),
-      success: function () {
-        renderUserInfo()
-      }
-    })
-  },
-  deleteUser: function(userID) {
-    return $.ajax({
-      url: "api/users/" + userID,
-      type: "DELETE"
-    });
-  },
+  // updateUserInfo: function(userID, formData) {
+  //   return $.ajax({
+  //     url: "api/userinfo/" + userID,
+  //     type: "PUT",
+  //     data: JSON.stringify(formData),
+  //     success: function () {
+  //       renderUserInfo()
+  //     }
+  //   })
+  // },
+  // deleteUser: function(userID) {
+  //   return $.ajax({
+  //     url: "api/users/" + userID,
+  //     type: "DELETE"
+  //   });
+  // },
   saveSong: function(song) {
     return $.ajax({
       headers: {
@@ -80,47 +68,19 @@ var API = {
       data: JSON.stringify(song)
     });
   },
-  getPlaylists: function(userID) {
-    return $.ajax({
-      url: "api/users/" + userID + "/playlists",
-      type: "GET"
-    });
-  },
-  deleteSong: function(songID, userID) {
-    return $.ajax({
-      url: "api/users/" + userID + "/" + songID,
-      type: "DELETE"
-    });
-  }
 };
 
-// refreshExamples gets new examples from the db and repopulates the list
-var refreshPlaylists = function() {
-  API.getPlaylists().then(function(data) {
-    var $examples = data.map(function(example) {
-      var $a = $("<a>")
-        .text(example.text)
-        .attr("href", "/example/" + example.id);
 
-      var $li = $("<li>")
-        .attr({
-          class: "list-group-item",
-          "data-id": example.id
-        })
-        .append($a);
-
-      var $button = $("<button>")
-        .addClass("btn btn-danger float-right delete")
-        .text("ｘ");
-
-      $li.append($button);
-
-      return $li;
+// checks to see if a user is in session
+var checkCurrentSession = function() {
+  return $.ajax({
+      url: "/auth/checksession",
+      type: "POST",
+      data: {bool: null},
+      success: function(data) {
+        return (data);
+      }
     });
-
-    $exampleList.empty();
-    $exampleList.append($examples);
-  });
 };
 
 
@@ -135,8 +95,8 @@ let handleSignup = function(event) {
     password: $("#password").val().trim()
   };
 
-  if (!(user.username && user.password)) {
-    alert("You must enter a username and password!");
+  if (!(user.username && user.password && user.firstName && user.lastName)) {
+    alert("All fields are required");
     return;
   };
 
@@ -154,7 +114,6 @@ let handleSignup = function(event) {
   $("#password").val("");
   $("#password2").val("");
 };
-
 $("#createAccount").on("click", handleSignup);
 
 
@@ -169,31 +128,48 @@ let handleLogin = function() {
     password: password
   }
   API.loginUser(user);
+  $("#usernameLogin").val("");
+  $("#passwordLogin").val("");
 };
-
 $("#submitLogin").on("click", handleLogin);
 
 
-
+// Handle user logout, redirect to home page
 let handleLogout = function() {
   API.logoutUser();
+  window.location = window.location.origin;
 };
 $("#logoutButton").on("click", handleLogout);
 
-
-// handleDeleteBtnClick is called when an example's delete button is clicked
-// Remove the example from the db and refresh the list
-var handleDeleteBtnClick = function() {
-  var idToDelete = $(this)
-    .parent()
-    .attr("data-id");
-
-  API.deleteExample(idToDelete).then(function() {
-    refreshExamples();
+// Set welcome message to include user's name
+let welcomeMessage = $("#welcome");
+let navName = $("#navName");
+var displayWelcome = function() {
+  checkCurrentSession().then(function(sesh) {
+    if (sesh.firstName) {
+      welcomeMessage.text("Hi, " + sesh.firstName + ", welcome back");
+      navName.text(sesh.firstName);
+    } else {
+      welcomeMessage.text("Welcome! Create an account or Login to discover and save songs");
+      navName.text("");
+    }
   });
 };
+displayWelcome();
 
-// $exampleList.on("click", ".delete", handleDeleteBtnClick);
+// Method to redirect user to their own playlists page
+let findMyPlaylists = function () {
+  checkCurrentSession().then(function(sesh) {
+    if(sesh.bool) {
+    window.location = window.location.origin + "/playlists/" + sesh.id;
+    } else {
+      $("#createAccount").show();
+      $("#modal1").show();
+      $("#modal1").css('zIndex', '200');
+      }
+  });
+};
+$("#playlistsButton").on("click", findMyPlaylists);
 
 
 // Grabbing / displaying relevant song information through API routing
@@ -212,7 +188,7 @@ var handleArtistSearch = function () {
     }
   });
 };
-
+// Further filter songs grabbed above
 var filterSongs = function (data, emotion) {
   let result;
   switch (emotion) {
@@ -238,7 +214,7 @@ var filterSongs = function (data, emotion) {
       break;
   }
 };
-
+// Display filtered songs
 var displaySongs = function (data) {
   let results = $("#resultsArea");
   let emotion = $('select').val();
@@ -284,7 +260,6 @@ var displaySongs = function (data) {
       results.append(songDiv);
     };
 };
-
 $("#submitArtist").on("click", handleArtistSearch);
 
 
@@ -303,7 +278,6 @@ var addButtonClick = function() {
   }
 
   checkCurrentSession().then(function(sesh) {
-    console.log(sesh.bool);
       if (!sesh.bool) {
       $("#createAccount").show();
       $("#modal1").show();
@@ -315,43 +289,3 @@ var addButtonClick = function() {
       }
   });
 };
-
-var checkCurrentSession = function() {
-  return $.ajax({
-      url: "/auth/checksession",
-      type: "POST",
-      data: {bool: null},
-      success: function(data) {
-        return (data);
-      }
-    });
-}
-
-let welcomeMessage = $("#welcome");
-var displayWelcome = function() {
-  checkCurrentSession().then(function(sesh) {
-    console.log(sesh.firstName);
-    if (sesh.firstName) {
-      welcomeMessage.text("Hi, " + sesh.firstName + ", welcome back");
-    } else {
-      welcomeMessage.text("Welcome! Create an account or Login to discover and save songs");
-    }
-  });
-};
-displayWelcome();
-
-let findMyPlaylists = function () {
-  checkCurrentSession().then(function(sesh) {
-    console.log(sesh.id);
-    console.log(window.location.origin);
-    window.location = window.location.origin + "/playlists/" + sesh.id;
-  });
-};
-$("#playlistsButton").on("click", findMyPlaylists);
-
-
-
-
-
-
-
