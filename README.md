@@ -1,3 +1,4 @@
+
 # TheraTune
 TheraTune is a playlist generating app based on your current emotion. Save songs, remove them, check out what others are listening to.
 
