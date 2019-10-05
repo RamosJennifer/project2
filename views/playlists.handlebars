@@ -1,7 +1,26 @@
-<div id="test"></div>
-<div class="snPlaylistsHB">
-    {{>sidenav/sidenav}}
+{{>sidenav/sidenav}}
+<div class="block pushpin-demo-nav">
+  <div class="row">
+    <div class="col l6 offset-l2">
+      <div class="card card2">
+        <div class="card-content">
+          <span class="card-title">
+            The Playlists of
+            <div id="test"></div>
+          </span>
+          {{!-- <p>Bio...</p> --}}
+        </div>
+        <div class="card-action">
+          <a href="#sad">Sad Playlist</a>
+          <a href="#mad">Mad Playlist</a>
+          <a href="#happy">Happy Playlist</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+{{!-- Sad Playlist --}}
 <div id="blue" class="block blue">
   <nav class="pushpin-demo-nav" data-target="blue">
     <div class="nav-wrapper light-blue">
@@ -10,12 +29,12 @@
       </div>
     </div>
     <div id="sad">
-        {{!-- Show User's Sad Songs Here --}}
+        {{!-- Show User's Sad Songs Here --}} 
     </div>
   </nav>
 </div>
-
-<div id="red" class="block red lighten-1">
+{{!-- Mad Playist --}}
+<div id="red" class="block red lighten-1 madfind">
   <nav class="pushpin-demo-nav" data-target="red">
     <div class="nav-wrapper red">
       <div class="container">
@@ -27,8 +46,8 @@
     </div>
   </nav>
 </div>
-
-<div id="green" class="block green lighten-1">
+{{!-- Happy Playlist --}}
+<div id="green" class="block green lighten-1 happyfind">
   <nav class="pushpin-demo-nav" data-target="green">
     <div class="nav-wrapper green">
       <div class="container">

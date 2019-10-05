@@ -20,14 +20,6 @@
   border-color: #008B8B;
   border-width: 10px;
 }
-/* #modal1, #modal2{
-  border-style: solid;
-  border-color: #008B8B;
-  border-width: 3px;
-} */
-.snPlaylistsHB{
-  background-color:rgb(3,169,244);
-}
 .songnameH{
   color:black;
   border-bottom: 3px solid #2196f3;
@@ -36,20 +28,19 @@
 .songAdderbtn, .btn{
   margin: 5px;
 }
-.card{
+.card1{
   height: 250px;
   width: 250px;
   border-style: double;
   border-color: #008B8B;
   border-width: 10px;
-  float: left;
+  float: right;
 }
-/* .songContainer {
-  margin-top: 5px;
-  border-radius: 5px;
-  transition: 0.3s;
+.card2{
+  height: 500px;
+  width: 500px;
+  border-style: double;
+  border-color: #008B8B;
+  border-width: 10px;
+  float: right;
 }
-.songContainer:hover {
-  border-left: 3px solid #008B8B;
-  background: lightgray;
-} */
